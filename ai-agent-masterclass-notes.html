@@ -1,0 +1,2632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Field Manual — Zev</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f17;
+    --bg-card: rgba(22, 26, 40, 0.55);
+    --bg-card-hover: rgba(30, 35, 52, 0.65);
+    --bg-highlight: rgba(36, 40, 56, 0.5);
+    --border: rgba(50, 56, 82, 0.25);
+    --border-hover: rgba(80, 90, 130, 0.35);
+    --text: #c0caf5;
+    --text-dim: #565f89;
+    --text-faint: #2f3450;
+    --section-label: rgba(130, 140, 170, 0.4);
+    --pink: #f7768e;
+    --orange: #ff9e64;
+    --yellow: #e0af68;
+    --green: #9ece6a;
+    --teal: #73daca;
+    --cyan: #7dcfff;
+    --blue: #7aa2f7;
+    --purple: #bb9af7;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    line-height: 1.6;
+    font-size: 12px;
+    overflow-x: hidden;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    animation: breatheBorder 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .grain {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9999; opacity: 0.02;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  .hero {
+    padding: 60px 40px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    grid-column: 1 / -1;
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(247, 118, 142, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--pink);
+    margin-bottom: 16px;
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid rgba(247, 118, 142, 0.3);
+    border-radius: 20px;
+    background: rgba(247, 118, 142, 0.1);
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 32px);
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  h1 span { color: var(--pink); }
+
+  .hero-sub {
+    color: var(--text-dim);
+    font-size: 12px;
+    max-width: 600px;
+    margin: 0 auto 20px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  .hero-meta {
+    margin-top: 16px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    flex-wrap: wrap;
+  }
+
+  .hero-meta strong { color: var(--pink); }
+
+  .progress-wrap {
+    margin-top: 16px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .progress-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .progress-label strong {
+    color: var(--green);
+  }
+
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* Sidebar Navigation */
+  .sidebar {
+    grid-row: 2;
+    grid-column: 1;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    height: calc(100vh - var(--hero-height, 200px));
+    overflow-y: auto;
+    z-index: 40;
+  }
+
+  .sidebar-nav {
+    list-style: none;
+  }
+
+  .sidebar-nav li {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+  }
+
+  .sidebar-nav a:hover {
+    color: var(--text);
+    background: rgba(122, 162, 247, 0.1);
+    border-left-color: var(--blue);
+  }
+
+  .sidebar-nav a.active {
+    color: var(--blue);
+    background: rgba(122, 162, 247, 0.1);
+    border-left-color: var(--blue);
+    font-weight: 600;
+  }
+
+  .sidebar-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    min-width: 30px;
+    opacity: 0.6;
+  }
+
+  /* Content Area */
+  .content-area {
+    grid-row: 2;
+    grid-column: 2;
+    overflow-y: auto;
+  }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
+
+  section {
+    padding: 60px 0;
+    display: none;
+  }
+
+  section.active {
+    display: block;
+    animation: fadeSlideIn 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header h2 {
+    margin: 0;
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--pink);
+    background: var(--pink-dim);
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+
+  h3 {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 30px 0 14px;
+    color: var(--text);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  h4 {
+    font-size: 11px;
+    font-weight: 600;
+    margin: 20px 0 10px;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  /* Cards */
+  .video-card {
+    background: rgba(22, 26, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(50, 56, 82, 0.25);
+    border-radius: 12px;
+    padding: 28px;
+    margin-bottom: 24px;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .video-card:hover {
+    transform: translateY(-4px) scale(1.008);
+    border-color: rgba(247, 118, 142, 0.35);
+    box-shadow: 0 0 32px rgba(247, 118, 142, 0.2), 0 0 64px rgba(247, 118, 142, 0.08), 0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .video-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .video-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .video-meta a {
+    color: var(--pink);
+    text-decoration: none;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+  p.dim { color: var(--text-dim); }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .tag-action { background: rgba(158, 206, 106, 0.12); color: var(--green); }
+  .tag-research { background: rgba(122, 162, 247, 0.12); color: var(--cyan); }
+  .tag-watch { background: rgba(187, 154, 247, 0.12); color: var(--purple); }
+  .tag-info { background: rgba(224, 175, 104, 0.12); color: var(--yellow); }
+  .tag-priority { background: rgba(247, 118, 142, 0.12); color: var(--pink); }
+  .tag-done { background: rgba(158, 206, 106, 0.12); color: var(--green); }
+  .tag-in-progress { background: rgba(255, 158, 100, 0.12); color: var(--orange); }
+  .tag-todo { background: rgba(122, 162, 247, 0.12); color: var(--cyan); }
+
+  /* Status badges */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-weight: 500;
+  }
+
+  .status-done {
+    background: rgba(158, 206, 106, 0.15);
+    color: var(--green);
+  }
+
+  .status-in-progress {
+    background: rgba(255, 158, 100, 0.15);
+    color: var(--orange);
+  }
+
+  .status-todo {
+    background: rgba(122, 162, 247, 0.15);
+    color: var(--cyan);
+  }
+
+  .status-badge::before {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  .status-done .status-badge::before {
+    animation: heartbeatRing 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Item lists */
+  .item-list { list-style: none; }
+
+  .item-list li {
+    padding: 14px 18px;
+    border-left: 3px solid var(--border);
+    margin-bottom: 8px;
+    background: transparent;
+    border-radius: 8px;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .item-list li:hover {
+    background: rgba(122, 162, 247, 0.05);
+    border-left-color: var(--pink);
+  }
+
+  .item-list li.done {
+    opacity: 0.5;
+  }
+
+  .item-list li strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .item-list li p {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .item-list li .tag { margin-top: 8px; }
+
+  /* Framework box */
+  .framework {
+    background: rgba(22, 26, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(50, 56, 82, 0.25);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 24px 0;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .framework:hover {
+    transform: translateY(-4px) scale(1.008);
+    border-color: rgba(247, 118, 142, 0.35);
+    box-shadow: 0 0 32px rgba(247, 118, 142, 0.2), 0 0 64px rgba(247, 118, 142, 0.08), 0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .framework-title {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    color: var(--pink);
+  }
+
+  .framework-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+
+  .framework-col {
+    padding: 20px;
+    background: rgba(122, 162, 247, 0.04);
+    border-radius: 8px;
+    border: 2px solid rgba(122, 162, 247, 0.3);
+  }
+
+  .framework-col h4 {
+    font-family: var(--mono);
+    font-size: 28px;
+    color: var(--pink);
+    margin-bottom: 4px;
+  }
+
+  .framework-col h5 {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .framework-col p {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    background: transparent;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-size: 11px;
+  }
+
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* Chain */
+  .chain {
+    display: flex;
+    gap: 0;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+
+  .chain-node {
+    background: rgba(22, 26, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    text-align: center;
+    font-size: 11px;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .chain-node:hover {
+    border-color: rgba(247, 118, 142, 0.35);
+  }
+
+  .chain-node strong {
+    display: block;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .chain-node span {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+
+  .chain-arrow {
+    font-size: 18px;
+    color: var(--pink);
+    padding: 0 8px;
+  }
+
+  /* Phase cards */
+  .phase {
+    background: rgba(22, 26, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(50, 56, 82, 0.25);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 16px;
+    align-items: start;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .phase:hover {
+    transform: translateY(-4px) scale(1.008);
+    border-color: rgba(247, 118, 142, 0.35);
+    box-shadow: 0 0 32px rgba(247, 118, 142, 0.2), 0 0 64px rgba(247, 118, 142, 0.08), 0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .phase-num {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--pink);
+    line-height: 1;
+  }
+
+  .phase-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .phase h4 {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .phase p { font-size: 11px; color: var(--text-dim); margin: 0; line-height: 1.6; }
+
+  .phase ul {
+    list-style: none;
+    margin-top: 8px;
+  }
+
+  .phase ul li {
+    font-size: 11px;
+    color: var(--text-dim);
+    padding: 3px 0;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .phase ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--pink);
+  }
+
+  /* Collapsible sections */
+  .collapsible {
+    background: rgba(22, 26, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(50, 56, 82, 0.25);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .collapsible:hover {
+    border-color: rgba(247, 118, 142, 0.35);
+  }
+
+  .collapsible-header {
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .collapsible-header:hover {
+    background: rgba(247, 118, 142,  0.08);
+  }
+
+  .collapsible-header::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 10px;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    color: var(--pink);
+    font-size: 10px;
+  }
+
+  .collapsible.open .collapsible-header::before {
+    transform: rotate(90deg);
+  }
+
+  .collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .collapsible.open .collapsible-content {
+    max-height: 5000px;
+    transition: max-height 0.3s ease-in;
+  }
+
+  .collapsible-body {
+    padding: 0 20px 20px;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .collapsible-body h5 {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 16px 0 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .collapsible-body ul, .collapsible-body ol {
+    margin-left: 20px;
+    margin-bottom: 12px;
+  }
+
+  .collapsible-body li {
+    margin-bottom: 4px;
+  }
+
+  .collapsible-body code {
+    background: rgba(22, 26, 40, 0.8);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--cyan);
+  }
+
+  .collapsible-body pre {
+    background: rgba(13, 15, 23, 0.8);
+    border: 1px solid rgba(50, 56, 82, 0.25);
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 12px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .filter-btn:hover {
+    color: var(--blue);
+    border-color: rgba(122, 162, 247, 0.35);
+    background: rgba(122, 162, 247, 0.05);
+  }
+
+  .filter-btn.active {
+    color: var(--blue);
+    background: rgba(122, 162, 247, 0.15);
+    border-color: rgba(122, 162, 247, 0.35);
+  }
+
+  .filter-btn .count {
+    margin-left: 6px;
+    opacity: 0.6;
+  }
+
+  /* Links section */
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .link-card {
+    background: rgba(22, 26, 40, 0.55);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgba(50, 56, 82, 0.25);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .link-card:hover {
+    transform: translateY(-4px) scale(1.008);
+    border-color: rgba(247, 118, 142, 0.35);
+    box-shadow: 0 0 32px rgba(247, 118, 142, 0.2), 0 0 64px rgba(247, 118, 142, 0.08), 0 12px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .link-card .lc-name {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .link-card .lc-desc {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  .link-card .lc-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--pink);
+    background: rgba(247, 118, 142, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 60px 30px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 13px;
+    grid-column: 1 / -1;
+  }
+
+  footer strong { color: var(--text); }
+
+  /* Hamburger menu */
+  .hamburger {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    gap: 6px;
+    flex-direction: column;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 1px;
+    transition: all 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      grid-template-columns: 1fr;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+
+    .hamburger.open span:nth-child(1) {
+      transform: rotate(45deg) translateY(10px);
+    }
+
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.open span:nth-child(3) {
+      transform: rotate(-45deg) translateY(-10px);
+    }
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 240px;
+      height: 100vh;
+      transform: translateX(-100%);
+      transition: transform 0.3s;
+      z-index: 45;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .content-area {
+      grid-column: 1;
+    }
+
+    .hero { padding: 50px 20px 30px; }
+    .framework-cols { grid-template-columns: 1fr; }
+    .chain { flex-direction: column; }
+    .chain-arrow { transform: rotate(90deg); }
+    .phase { grid-template-columns: 1fr; }
+    .hero-meta { flex-direction: column; gap: 8px; }
+  }
+
+  /* Neon Noir Animations */
+  @keyframes breatheBorder {
+    0%, 100% {
+      box-shadow: inset 0 0 80px rgba(122, 162, 247, 0.025), inset 0 1px 0 rgba(122, 162, 247, 0.06), inset 0 -1px 0 rgba(122, 162, 247, 0.04), inset 1px 0 0 rgba(122, 162, 247, 0.04), inset -1px 0 0 rgba(122, 162, 247, 0.04);
+    }
+    50% {
+      box-shadow: inset 0 0 120px rgba(122, 162, 247, 0.055), inset 0 1px 0 rgba(122, 162, 247, 0.14), inset 0 -1px 0 rgba(122, 162, 247, 0.1), inset 1px 0 0 rgba(122, 162, 247, 0.1), inset -1px 0 0 rgba(122, 162, 247, 0.1);
+    }
+  }
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes staggerIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes heartbeatRing {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    70% {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(50, 56, 82, 0.4);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(80, 90, 130, 0.5);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="hero">
+  <div class="hero-label">Field Manual</div>
+  <h1>AI <span>Field Manual</span></h1>
+  <p class="hero-sub">Frameworks, workflows, setup guides, and action items. The operational reference for Zev's AI infrastructure.</p>
+  <div class="hero-meta">
+    <span><strong>3</strong> Videos</span>
+    <span><strong>14</strong> Action Items</span>
+    <span><strong>4</strong> Frameworks</span>
+    <span>March 1, 2026</span>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label"><strong id="progress-done">0</strong> / <span id="progress-total">14</span> items complete</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+</div>
+
+<button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+
+<nav class="sidebar" id="sidebar">
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li><a href="#" data-section="videos" class="nav-link active"><span class="sidebar-num">01</span>Video Summaries</a></li>
+    <li><a href="#" data-section="crt" class="nav-link"><span class="sidebar-num">02</span>CRT Framework</a></li>
+    <li><a href="#" data-section="actions" class="nav-link"><span class="sidebar-num">03</span>Action Items</a></li>
+    <li><a href="#" data-section="airtable" class="nav-link"><span class="sidebar-num">04</span>Airtable Schema</a></li>
+    <li><a href="#" data-section="apis" class="nav-link"><span class="sidebar-num">05</span>API Aggregators</a></li>
+    <li><a href="#" data-section="blotato" class="nav-link"><span class="sidebar-num">06</span>Blotato</a></li>
+    <li><a href="#" data-section="pipeline" class="nav-link"><span class="sidebar-num">07</span>Marketing Pipeline</a></li>
+    <li><a href="#" data-section="phases" class="nav-link"><span class="sidebar-num">08</span>Implementation</a></li>
+    <li><a href="#" data-section="watchlist" class="nav-link"><span class="sidebar-num">09</span>Watch List</a></li>
+    <li><a href="#" data-section="openclaw" class="nav-link"><span class="sidebar-num">10</span>OpenClaw Setup</a></li>
+    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">11</span>Links &amp; Resources</a></li>
+  </ul>
+</nav>
+
+<div class="content-area">
+<div class="container">
+
+  <!-- VIDEOS -->
+  <section id="videos" class="active">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Video Summaries</h2>
+    </div>
+
+    <div class="video-card">
+      <div class="video-title">336 Ways to Use OpenClaw (here's what actually works)</div>
+      <div class="video-meta">
+        <span>RoboNuggets (Jay)</span>
+        <span>Feb 26, 2026</span>
+        <span>30,670 views</span>
+        <a href="https://www.skool.com/robonuggets-free" target="_blank">Resources (search n38)</a>
+      </div>
+      <p>Jay scraped 336 use cases for OpenClaw across YouTube, GitHub, Reddit, X, and the open web. OpenClaw is an open-source AI agent you add to messaging apps (Telegram, WhatsApp, Slack) and give its own computer so it acts like a digital employee. It's the fastest-growing open-source project in GitHub history. OpenAI hired the creator, so a mass-market version is likely coming.</p>
+
+      <h3>Top Categories</h3>
+      <p><strong>Setup &amp; Configuration</strong> — The biggest chunk. People perfecting agent workspaces, memory systems, and skills. Jay compares it to early Notion "second brain" mania. Key insight: think in "roles to fill" (admin, developer, marketer) not individual tasks.</p>
+      <p><strong>Coding &amp; Development</strong> — Early adopters skew technical. For serious full-stack work, Claude Code gives more control. OpenClaw's edge is convenience (Jay built a database website from his phone over lunch).</p>
+      <p><strong>Life Admin &amp; Self-Growth</strong> — Where it really shines. Eye drop reminders after LASIK, recycling schedules, email newsletter summaries, meeting prep docs, job search monitoring, voice journaling, custom morning briefings, "learning mode" for curated content discovery.</p>
+      <p><strong>Smart Home</strong> — E-ink displays with historical events, Meta glasses integration. Google/Alexa will likely absorb these.</p>
+      <p><strong>Health (~3%)</strong> — Trackers, allergen detection, fitness coaching. Key limitation: no access to large food databases like MyFitnessPal. Proprietary databases remain a real moat for SaaS.</p>
+      <p><strong>Content &amp; Marketing</strong> — Keyword/trend monitoring, Reddit digests, podcast guest research, Meta ad drafts, competitor research via Meta Ads Library.</p>
+      <p><strong>Finance (risky)</strong> — Bank statement audits, investment alerts, automated trading. Not recommended.</p>
+      <p><strong>Making Money</strong> — Deployment services (SimpleClaw, SetupClaw) are short-term arbitrage. Long-term: managed service providers for AI agents in specific industries, and a "template economy" similar to Notion/Shopify templates.</p>
+
+      <h3>Key Concepts from Database Screenshots</h3>
+      <p><strong>Model Fallback Chain</strong> — Tier 1 (expensive, best quality) &gt; Tier 2 (cheaper) &gt; Tier 3 as last resort. Never get stuck on a single model going down.</p>
+      <p><strong>Humanizer Skill</strong> — Matthew Berman's approach: remove telltale AI patterns. No em dashes, no "certainly," no "delve," no bullet points starting sentences.</p>
+      <p><strong>Agents as Roles</strong> — Brian's mindset shift: don't ask "do I want a personal assistant?" Ask "what roles on my team could this fill?"</p>
+      <p><strong>PR Review Workflow</strong> — Peter Steinberger: first ask the agent "Do you understand the intent of this PR?" before looking at implementation.</p>
+      <p><strong>Security Council</strong> — Matthew Berman: At 3:30 AM, four AI security experts (offensive, defensive, data privacy, operational authenticity) review the entire codebase and Git commits.</p>
+    </div>
+
+    <div class="video-card">
+      <div class="video-title">Antigravity + Blotato one-shots $10,000 marketing campaigns (NEW MCP)</div>
+      <div class="video-meta">
+        <span>RoboNuggets (Jay)</span>
+        <span>Feb 24, 2026</span>
+        <span>12,560 views</span>
+        <a href="https://www.skool.com/robonuggets-free" target="_blank">Resources (search R57)</a>
+      </div>
+      <p>Shows how to use Antigravity (Google's agentic platform) + Blotato ($29/mo AI content engine) + Nano Banana Pro (~$3 for 30 images) to automate entire marketing campaigns from a single prompt.</p>
+
+      <h3>Three Levels</h3>
+      <p><strong>Level 1: Post once, publish everywhere</strong> — Drag a video into Antigravity, it posts to Instagram, TikTok, YouTube with auto-generated captions via Blotato.</p>
+      <p><strong>Level 2: 30-day campaign generation</strong> — One prompt generates 30 unique images, captions, hashtags, all stored in Airtable, all scheduled via Blotato.</p>
+      <p><strong>Level 3: Always-on automation</strong> — YouTube-to-LinkedIn pipeline. Deployed to Modal.com, runs nightly at 9 PM: checks RSS feed for new videos, extracts transcript via Blotato, generates infographic via Nano Banana Pro, writes LinkedIn post using brand voice from brand.md, publishes through Blotato. All without opening Antigravity.</p>
+
+      <h3>Key Files to Set Up</h3>
+      <p><strong>brand.md</strong> — Brand guidelines (who you are, audience, tone). Generate by screenshotting your existing social feed and having AI analyze it.</p>
+      <p><strong>style.png</strong> — Visual reference for infographic/image styling consistency.</p>
+      <p><strong>Blotato skill pack (.md)</strong> — Best practices for how agents use Blotato.</p>
+      <p><strong>Modal deployment skill (.md)</strong> — Documentation for deploying automations to the cloud.</p>
+      <p><strong>Image prompt best practices (.md)</strong> — 432 lines of guidance for UGC, studio shots, etc.</p>
+    </div>
+
+    <div class="video-card">
+      <div class="video-title">Antigravity + Every Image &amp; Video AI is a Cheat Code for Creators (NEW Skill)</div>
+      <div class="video-meta">
+        <span>RoboNuggets (Jay)</span>
+        <span>Feb 20, 2026</span>
+        <span>34,536 views</span>
+        <a href="https://www.skool.com/robonuggets-free" target="_blank">Resources (search R56)</a>
+      </div>
+      <p>A skill that lets Claude Code, Antigravity, Codex, or any agentic platform connect to and prompt any generative AI model. You become the creative director; the agent handles prompting, generation, logging, and delivery.</p>
+
+      <h3>Five Key Advantages</h3>
+      <p><strong>1. Creative Director Mode</strong> — You review and approve. The agent handles image analysis, prompt crafting, Airtable logging, batch generation, and cost tracking.</p>
+      <p><strong>2. Self-Learning System</strong> — Agent trains on your prompt best practices (387+ lines of documentation). Learns from your feedback and external workflows (n8n, etc.). Absorbs new techniques you feed it. Never goes obsolete because integrating new models is just copying API docs.</p>
+      <p><strong>3. Multi-Agent Parallel Processing</strong> — Spawn multiple agents working simultaneously on different products, styles, or models. Three agents generating content in parallel while you step away.</p>
+      <p><strong>4. No Node Spaghetti</strong> — Unlike Weev or n8n workflows that become complex and break with model updates, you just describe what you want. Agent handles polling, waiting, retries, and even automatic failover between providers.</p>
+      <p><strong>5. Cost Efficiency</strong> — Use API aggregators (Key AI, Fal AI, Wavespeed) instead of paying for wrapper platforms like Highsfield. Google AI Studio gives $300 free credit per Gmail account for Nano Banana Pro and VO 3.1.</p>
+
+      <h3>Workflow Breakdown</h3>
+      <p>1. Provide product photo or brand reference → 2. Agent analyzes image + brand guidelines + prompt best practices → 3. Creates Airtable records with unique prompts and cost estimates → 4. Generates images via chosen models (2 variations each) → 5. You review in Airtable → 6. Select winners, direct agent to animate with video models (Sora 2 Pro, VO 3.1, Kling 3.0) → 7. Agent crafts video prompts with dialogue, camera specs → 8. Videos generate in parallel → 9. All assets logged in Airtable.</p>
+    </div>
+  </section>
+
+  <!-- CRT FRAMEWORK -->
+  <section id="crt">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>The CRT Framework</h2>
+    </div>
+    <p style="margin-bottom:24px;">Jay's organizational structure for setting up your creative AI agent workspace. Works across Claude Code, Antigravity, and Codex.</p>
+
+    <div class="framework">
+      <div class="framework-title">C — R — T</div>
+      <div class="framework-cols">
+        <div class="framework-col">
+          <h4>C</h4>
+          <h5>.Claude / .Agent</h5>
+          <p>Your AI agent's brain. A markdown file (CLAUDE.md or .agent) containing all instructions, directives, API key references, provider system configuration, and personality. This is the orchestrator that controls everything.</p>
+        </div>
+        <div class="framework-col">
+          <h4>R</h4>
+          <h5>References</h5>
+          <p>Your inputs, brand images, style references, product shots, and prompt best practices documentation (387+ lines). Everything the agent needs as creative fuel. Continuously updated as you refine your style.</p>
+        </div>
+        <div class="framework-col">
+          <h4>T</h4>
+          <h5>Tools</h5>
+          <p>Python scripts and workflows that route tasks to different AI models. Handles Airtable updates, image/video generation API calls, cost tracking, and provider failover. Think of each .py file as an n8n workflow in code form.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="dim">The Provider System inside CLAUDE.md lets you override which API aggregator handles generation by passing <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;">provider="kie"</code>, <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;">provider="google"</code>, or <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;">provider="wavespeed"</code> to generation functions.</p>
+  </section>
+
+  <!-- ACTION ITEMS -->
+  <section id="actions">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>All Action Items</h2>
+    </div>
+
+    <div class="filter-bar" id="action-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="done">Done</button>
+      <button class="filter-btn" data-filter="in-progress">In Progress</button>
+      <button class="filter-btn" data-filter="todo">To Do</button>
+    </div>
+
+    <ul class="item-list" id="action-list">
+      <li data-status="done">
+        <strong>Custom Morning Briefings <span class="status-badge status-done">Done</span></strong>
+        <p>Daily digest of relevant news, production updates, calendar overview delivered as a message.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="done">
+        <strong>Daily Life Reminders System <span class="status-badge status-done">Done</span></strong>
+        <p>Medication, errands, recurring task management via agent.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="in-progress">
+        <strong>Build Mission Control Dashboard <span class="status-badge status-in-progress">In Progress</span></strong>
+        <p>Custom daily overview pulling together production timelines, calendars, tasks, vendor statuses, Airbnb bookings, DAEMON_ pipeline.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="in-progress">
+        <strong>Build Airtable Creative Content Engine <span class="status-badge status-in-progress">In Progress</span></strong>
+        <p>Set up Airtable with tables for Creative Assets, Campaigns, Storyboard Sequences, and AI Model Registry. Connect to Claude Code via MCP and Antigravity.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="in-progress">
+        <strong>Set Up CRT Framework Workspace <span class="status-badge status-in-progress">In Progress</span></strong>
+        <p>Create CLAUDE.md (agent brain), References folder (brand images, prompt best practices), and Tools folder (Python scripts for API routing). Download Jay's setup from RoboNuggets (R56).</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Implement Model Fallback Chain <span class="status-badge status-todo">To Do</span></strong>
+        <p>Tier 1 (Opus 4.6) for complex tasks → Tier 2 for simple tasks → Tier 3 as last resort. Manages API costs and reliability.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Build Humanizer Skill <span class="status-badge status-todo">To Do</span></strong>
+        <p>Run AI content through a filter that strips telltale patterns: no em dashes, no "certainly," no "delve," no bullet point openers.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Design Role-Based Agent Architecture <span class="status-badge status-todo">To Do</span></strong>
+        <p>Think in roles (admin, developer, marketer, creative director) not individual tasks. "If I were hiring a team today, what positions would I fill?"</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Learning Mode <span class="status-badge status-todo">To Do</span></strong>
+        <p>On-demand skill: "I'm in learning mode." Get curated content. Pre-Japan trip focus: Japanese language basics, history, culture.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Travel Search Agent <span class="status-badge status-todo">To Do</span></strong>
+        <p>Monitor and search airline tickets/deals automatically.</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Business Marketing Automation <span class="status-badge status-todo">To Do</span></strong>
+        <p>Meta ad drafting, competitor monitoring, content repurposing. Major opportunity for Electra Filmworks and DAEMON_.</p>
+        <span class="tag tag-priority">High Priority</span><span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>YouTube-to-LinkedIn Content Pipeline <span class="status-badge status-todo">To Do</span></strong>
+        <p>Monitor relevant YouTube channels, auto-pull transcripts via Blotato, generate blog summaries and infographics, schedule posts. Deploy via Modal.com for always-on automation. Repurpose for your own marketing.</p>
+        <span class="tag tag-priority">High Priority</span><span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Set Up Blotato + Antigravity Pipeline <span class="status-badge status-todo">To Do</span></strong>
+        <p>Sign up for Blotato ($29/mo Starter), connect social accounts, install MCP connector in Antigravity, download RoboNuggets skill (R57).</p>
+        <span class="tag tag-action">Actionable</span>
+      </li>
+      <li data-status="todo">
+        <strong>Investment Portfolio Monitoring (Experimental) <span class="status-badge status-todo">To Do</span></strong>
+        <p>Set up a dummy account and test different AI models for investment decisions. Look into FXNCTION on Twitter for reference.</p>
+        <span class="tag tag-research">Research</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- AIRTABLE SCHEMA -->
+  <section id="airtable">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Airtable Schema for Creative Production</h2>
+    </div>
+    <p style="margin-bottom:24px;">Recommended table structure for video/image ideation, storyboarding, and AI-assisted creative production.</p>
+
+    <h3>Table 1: Creative Assets</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td>Row #</td><td>Auto Number</td><td>Sequential ID</td></tr>
+        <tr><td>Project</td><td>Single Select</td><td>Electra / DAEMON_ / Airbnb / Personal</td></tr>
+        <tr><td>Campaign</td><td>Linked Record</td><td>Links to Campaigns table</td></tr>
+        <tr><td>Asset Type</td><td>Single Select</td><td>Image Ad / UGC / Studio Shot / Storyboard Frame / Product Shot</td></tr>
+        <tr><td>Reference Image</td><td>Attachment</td><td>Source photo or brand reference</td></tr>
+        <tr><td>Image Prompt</td><td>Long Text</td><td>AI or hand-written prompt</td></tr>
+        <tr><td>Model Used (Image)</td><td>Single Select</td><td>Nano Banana Pro / GPT Image 1.5 / Flux / DALL-E</td></tr>
+        <tr><td>Generated Image 1</td><td>Attachment</td><td>First variation</td></tr>
+        <tr><td>Generated Image 2</td><td>Attachment</td><td>Second variation</td></tr>
+        <tr><td>Image Status</td><td>Single Select</td><td>Queued / Generating / Generated / Approved / Rejected</td></tr>
+        <tr><td>Video Prompt</td><td>Long Text</td><td>Dialogue, action, camera specs</td></tr>
+        <tr><td>Video Model</td><td>Single Select</td><td>Sora 2 Pro / VO 3.1 / Kling 3.0 / Seance</td></tr>
+        <tr><td>Generated Video 1</td><td>Attachment</td><td>First video variation</td></tr>
+        <tr><td>Generated Video 2</td><td>Attachment</td><td>Second video variation</td></tr>
+        <tr><td>Video Status</td><td>Single Select</td><td>Queued / Generating / Generated / Approved / Rejected</td></tr>
+        <tr><td>Cost</td><td>Currency</td><td>Generation cost tracking</td></tr>
+        <tr><td>Notes</td><td>Long Text</td><td>Creative director notes, feedback</td></tr>
+      </table>
+    </div>
+
+    <h3>Table 2: Campaigns</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td>Campaign Name</td><td>Single Line</td><td>e.g., "DAEMON_ Spring Launch"</td></tr>
+        <tr><td>Brand</td><td>Single Select</td><td>Which brand this serves</td></tr>
+        <tr><td>Brand Guidelines</td><td>Attachment</td><td>brand.md file</td></tr>
+        <tr><td>Style Reference</td><td>Attachment</td><td>style.png for visual consistency</td></tr>
+        <tr><td>Start / End Date</td><td>Date</td><td>Campaign window</td></tr>
+        <tr><td>Platform Targets</td><td>Multi Select</td><td>Instagram / LinkedIn / X / YouTube / TikTok</td></tr>
+        <tr><td>Linked Assets</td><td>Linked Record</td><td>All assets in this campaign</td></tr>
+      </table>
+    </div>
+
+    <h3>Table 3: Storyboard Sequences</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td>Sequence Name</td><td>Single Line</td><td>e.g., "Shockwave Opening"</td></tr>
+        <tr><td>Campaign</td><td>Linked Record</td><td>Parent campaign</td></tr>
+        <tr><td>Frame #</td><td>Number</td><td>Order in sequence</td></tr>
+        <tr><td>Shot Description</td><td>Long Text</td><td>What happens in this frame</td></tr>
+        <tr><td>Camera / Lens</td><td>Single Line</td><td>e.g., "35mm Panavision, low angle"</td></tr>
+        <tr><td>Lighting Notes</td><td>Single Line</td><td>Mood / lighting direction</td></tr>
+        <tr><td>Image Prompt</td><td>Long Text</td><td>AI prompt for storyboard frame</td></tr>
+        <tr><td>Generated Frame</td><td>Attachment</td><td>AI-generated storyboard image</td></tr>
+        <tr><td>Duration (sec)</td><td>Number</td><td>Estimated shot length</td></tr>
+        <tr><td>Dialogue / VO</td><td>Long Text</td><td>Spoken content</td></tr>
+        <tr><td>SFX / Music</td><td>Long Text</td><td>Sound design direction</td></tr>
+      </table>
+    </div>
+
+    <h3>Table 4: AI Model Registry</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td>Model Name</td><td>Single Line</td><td>e.g., Kling 3.0</td></tr>
+        <tr><td>Type</td><td>Single Select</td><td>Image / Video / Audio</td></tr>
+        <tr><td>Provider</td><td>Single Select</td><td>Google / OpenAI / Kling / Fal AI / Key AI / Wavespeed</td></tr>
+        <tr><td>API Endpoint</td><td>URL</td><td>For agent routing</td></tr>
+        <tr><td>Cost Per Gen</td><td>Currency</td><td>Budget tracking</td></tr>
+        <tr><td>Quality Rating</td><td>Rating</td><td>Your subjective score</td></tr>
+        <tr><td>Best For</td><td>Multi Select</td><td>UGC / Studio / Cinematic / Product / Storyboard</td></tr>
+      </table>
+    </div>
+
+    <h3>Connecting Airtable</h3>
+    <p><strong>To Claude Code:</strong> <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">claude mcp add --transport stdio --env AIRTABLE_API_KEY=YOUR_KEY airtable -- npx -y airtable-mcp-server</code></p>
+    <p><strong>To Antigravity:</strong> Airtable connects via MCP (Model Context Protocol). Provide your API key and base ID in Antigravity's MCP server configuration.</p>
+    <p><strong>Direct scripting:</strong> You can also call the Anthropic API directly from Airtable's Scripting Extension, paying only per API call.</p>
+  </section>
+
+  <!-- API AGGREGATORS -->
+  <section id="apis">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>API Aggregators &amp; Fallback Chain</h2>
+    </div>
+
+    <div class="chain">
+      <div class="chain-node"><strong>Google AI Studio</strong><span>Free $300 credit/Gmail</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-node"><strong>Key AI</strong><span>Cheapest prices</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-node"><strong>Fal AI</strong><span>400+ models, reliable</span></div>
+      <span class="chain-arrow">→</span>
+      <div class="chain-node"><strong>Wavespeed AI</strong><span>Backup, competitive pricing</span></div>
+    </div>
+
+    <h3>Setup Plan</h3>
+    <p>1. Create accounts on Key AI, Fal AI, and Wavespeed AI. 2. Get API keys from each. 3. Store in .env file or Antigravity environment variables. 4. Feed API documentation to Claude Code / Antigravity so it can integrate each provider. 5. Register models in Airtable's AI Model Registry. 6. Configure fallback chain in your CLAUDE.md provider system.</p>
+
+    <h3>Top Models to Connect</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Model</th><th>Type</th><th>Best For</th><th>Recommended Provider</th></tr>
+        <tr><td>Nano Banana Pro</td><td>Image</td><td>Realistic images, product shots</td><td>Google AI Studio (free)</td></tr>
+        <tr><td>Flux Pro</td><td>Image</td><td>Photorealism, complex scenes</td><td>Key AI</td></tr>
+        <tr><td>DALL-E 3</td><td>Image</td><td>Varied styles, artistic</td><td>Fal AI</td></tr>
+        <tr><td>Kling 3.0</td><td>Video</td><td>Cinematic 60fps motion</td><td>Fal AI</td></tr>
+        <tr><td>Sora 2 Pro</td><td>Video</td><td>Ultra-high quality, long form</td><td>Fal AI</td></tr>
+        <tr><td>VO 3.1</td><td>Video</td><td>Realistic talking heads</td><td>Google AI Studio (free)</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- BLOTATO -->
+  <section id="blotato">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Blotato: The AI Content Engine</h2>
+    </div>
+    <p style="margin-bottom:24px;">$29/mo subscription for multi-platform content scheduling, caption generation, and transcript extraction. Core tool in your automation stack.</p>
+
+    <h3>What Blotato Does</h3>
+    <ul style="margin-left:20px;margin-bottom:20px;">
+      <li>Auto-generates captions for videos</li>
+      <li>Extracts transcripts from YouTube/podcasts</li>
+      <li>Repurposes content across platforms (Instagram, TikTok, LinkedIn, YouTube)</li>
+      <li>Drafts social copy with hashtags and branding</li>
+      <li>Schedules posts in advance</li>
+      <li>Tracks analytics per platform</li>
+    </ul>
+
+    <h3>Integration with Your Workflow</h3>
+    <p><strong>Step 1:</strong> Connect your social media accounts (Instagram, TikTok, YouTube, LinkedIn)</p>
+    <p><strong>Step 2:</strong> Create a brand voice template (brand.md) describing your audience and tone</p>
+    <p><strong>Step 3:</strong> Upload or paste video/podcast content for transcription</p>
+    <p><strong>Step 4:</strong> Have Claude Code or Antigravity call Blotato API to generate captions, summaries, and posts</p>
+    <p><strong>Step 5:</strong> Store results in Airtable for review before publishing</p>
+
+    <h3>Key Features</h3>
+    <ul style="margin-left:20px;">
+      <li><strong>Smart Clips:</strong> Auto-extracts engaging 15-30 second segments from longer videos</li>
+      <li><strong>Caption Variants:</strong> Generate multiple caption versions for A/B testing</li>
+      <li><strong>Hashtag Auto-Generation:</strong> Suggests trending hashtags per platform</li>
+      <li><strong>Bulk Scheduling:</strong> Schedule 30 days of content from a single prompt</li>
+      <li><strong>Analytics Dashboard:</strong> Track performance per platform and content type</li>
+    </ul>
+  </section>
+
+  <!-- MARKETING PIPELINE -->
+  <section id="pipeline">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Marketing Pipeline Architecture</h2>
+    </div>
+    <p style="margin-bottom:24px;">End-to-end content creation pipeline from raw material to published posts across multiple platforms.</p>
+
+    <h3>Pipeline Stages</h3>
+
+    <div class="phase">
+      <div class="phase-num">1</div>
+      <div>
+        <div class="phase-label">Ingest</div>
+        <h4>Gather Source Material</h4>
+        <p>Video files, podcast links, blog articles, product photos, brand references</p>
+        <ul>
+          <li>YouTube channel RSS feed</li>
+          <li>Product photography (from shoot or Midjourney)</li>
+          <li>Brand guidelines and voice (brand.md)</li>
+          <li>Style reference images (style.png)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">2</div>
+      <div>
+        <div class="phase-label">Process</div>
+        <h4>Extract & Analyze</h4>
+        <p>Break down source material into usable components</p>
+        <ul>
+          <li>Extract transcript (Blotato)</li>
+          <li>Identify key talking points</li>
+          <li>Pull quotes for pull-quotes</li>
+          <li>Analyze tone and audience fit</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">3</div>
+      <div>
+        <div class="phase-label">Create</div>
+        <h4>Generate Assets</h4>
+        <p>Use AI to create platform-specific content</p>
+        <ul>
+          <li>Instagram: Carousel posts + captions (Nano Banana Pro for images)</li>
+          <li>LinkedIn: Long-form thought leadership (Claude)</li>
+          <li>TikTok: Auto-cut 15-30 sec videos + trending audio (Kling 3.0)</li>
+          <li>YouTube: Chapters, thumbnails, description</li>
+          <li>Blog: Full article with SEO optimization (Claude)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">4</div>
+      <div>
+        <div class="phase-label">Review</div>
+        <h4>Creative Director Approval</h4>
+        <p>You review all generated assets in Airtable before publishing</p>
+        <ul>
+          <li>Brand fit check</li>
+          <li>Tone/voice alignment</li>
+          <li>Factual accuracy</li>
+          <li>Approve or request revisions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">5</div>
+      <div>
+        <div class="phase-label">Publish</div>
+        <h4>Schedule &amp; Go Live</h4>
+        <p>Blotato handles multi-platform scheduling and timing</p>
+        <ul>
+          <li>Stagger posting times per platform for maximum reach</li>
+          <li>Track metrics in real-time</li>
+          <li>Auto-respond to comments (optional)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Tech Stack</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Component</th><th>Tool</th><th>Purpose</th></tr>
+        <tr><td>Orchestration</td><td>Claude Code / Antigravity</td><td>Directs the entire pipeline</td></tr>
+        <tr><td>Source Monitoring</td><td>RSS feeds, YouTube API</td><td>Detects new content</td></tr>
+        <tr><td>Transcription</td><td>Blotato</td><td>Converts video to text</td></tr>
+        <tr><td>Copy Generation</td><td>Claude Opus</td><td>Writes captions, posts, articles</td></tr>
+        <tr><td>Image Generation</td><td>Nano Banana Pro, Flux</td><td>Creates visuals</td></tr>
+        <tr><td>Video Generation</td><td>Kling 3.0, Sora 2</td><td>Creates video content</td></tr>
+        <tr><td>Content Repository</td><td>Airtable</td><td>Stores all assets and metadata</td></tr>
+        <tr><td>Publishing</td><td>Blotato</td><td>Schedules across platforms</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- IMPLEMENTATION PHASES -->
+  <section id="phases">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Implementation Phases</h2>
+    </div>
+    <p style="margin-bottom:24px;">Phased approach to building out the full AI agent and marketing automation system.</p>
+
+    <h3>Phase 1: Foundation (Week 1-2)</h3>
+    <div class="phase">
+      <div class="phase-num">1</div>
+      <div>
+        <h4>Set up CRT Framework Workspace</h4>
+        <ul>
+          <li>Create CLAUDE.md with agent brain and system prompts</li>
+          <li>Build References folder (brand.md, style.png, prompt library)</li>
+          <li>Create Tools folder with Python skeleton scripts</li>
+          <li>Download RoboNuggets templates (R56, R57)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">2</div>
+      <div>
+        <h4>Connect API Aggregators</h4>
+        <ul>
+          <li>Create accounts: Key AI, Fal AI, Wavespeed</li>
+          <li>Get API keys and test each with simple prompts</li>
+          <li>Set up .env file with all credentials</li>
+          <li>Implement fallback chain logic in CLAUDE.md</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">3</div>
+      <div>
+        <h4>Build Airtable Base</h4>
+        <ul>
+          <li>Create Creative Assets table</li>
+          <li>Create Campaigns table</li>
+          <li>Create Storyboard Sequences table</li>
+          <li>Create AI Model Registry table</li>
+          <li>Connect MCP to Claude Code</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Phase 2: Automation (Week 3-4)</h3>
+    <div class="phase">
+      <div class="phase-num">4</div>
+      <div>
+        <h4>Set Up Blotato + Antigravity</h4>
+        <ul>
+          <li>Sign up for Blotato ($29/mo Starter)</li>
+          <li>Connect social media accounts</li>
+          <li>Install MCP connector in Antigravity</li>
+          <li>Create first test campaign</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">5</div>
+      <div>
+        <h4>Build YouTube-to-LinkedIn Pipeline</h4>
+        <ul>
+          <li>Monitor 3-5 key YouTube channels via RSS</li>
+          <li>Auto-transcribe with Blotato on new videos</li>
+          <li>Generate LinkedIn post copy (Claude)</li>
+          <li>Create infographic (Nano Banana Pro or Flux)</li>
+          <li>Schedule via Blotato</li>
+          <li>Deploy to Modal.com for always-on automation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">6</div>
+      <div>
+        <h4>Marketing Automation for DAEMON_ / Electra</h4>
+        <ul>
+          <li>Meta ad copy drafting (from brand.md + product shots)</li>
+          <li>Competitor monitoring via Meta Ads Library</li>
+          <li>Content repurposing (one video → 10 social posts)</li>
+          <li>A/B test variants in Airtable</li>
+          <li>Track performance metrics</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Phase 3: Intelligence (Week 5+)</h3>
+    <div class="phase">
+      <div class="phase-num">7</div>
+      <div>
+        <h4>Implement Model Fallback Chain</h4>
+        <ul>
+          <li>Tier 1 (Opus 4.6) for complex creative decisions</li>
+          <li>Tier 2 (Sonnet 4) for copywriting and quick tasks</li>
+          <li>Tier 3 (Haiku) for simple categorization</li>
+          <li>Auto-retry on rate limits</li>
+          <li>Cost tracking and budget alerts</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">8</div>
+      <div>
+        <h4>Build Humanizer Skill</h4>
+        <ul>
+          <li>Strip AI telltale patterns (em dashes, "certainly," "delve")</li>
+          <li>Run all social copy through humanizer before publishing</li>
+          <li>Fine-tune based on audience feedback</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-num">9</div>
+      <div>
+        <h4>Design Role-Based Agent Architecture</h4>
+        <ul>
+          <li>Create specialized agent personas (copywriter, designer, analyst)</li>
+          <li>Each agent has its own CLAUDE.md with role-specific instructions</li>
+          <li>Master agent orchestrates between specialists</li>
+          <li>Improves quality and reduces token overhead</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- WATCH LIST -->
+  <section id="watchlist">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Watch List &amp; Emerging Trends</h2>
+    </div>
+    <p style="margin-bottom:24px;">Tools, approaches, and people to monitor as the AI agent ecosystem evolves.</p>
+
+    <h3>People</h3>
+    <ul style="margin-left:20px;margin-bottom:20px;">
+      <li><strong>Jay (RoboNuggets):</strong> Leading voice on OpenClaw use cases and the CRT framework. Drop into Skool daily.</li>
+      <li><strong>Matthew Berman:</strong> Security-first agent design. PR review workflows, security councils, humanizer skills.</li>
+      <li><strong>Brian:</strong> Role-based agent architecture. Rethinking "personal assistant" as a multi-person team.</li>
+      <li><strong>Peter Steinberger:</strong> PR comprehension workflows. Teaching agents to understand intent before implementation.</li>
+      <li><strong>FXNCTION (Twitter):</strong> AI-driven investment and portfolio monitoring. Watch for methodologies and guardrails.</li>
+    </ul>
+
+    <h3>Tools to Follow</h3>
+    <ul style="margin-left:20px;margin-bottom:20px;">
+      <li><strong>OpenClaw:</strong> Still the fastest-growing open-source AI agent. Hiring pickup from OpenAI means mass-market version coming.</li>
+      <li><strong>Antigravity:</strong> Google's agentic platform. Tight integration with Workspace, Search, and advertising.</li>
+      <li><strong>Codex:</strong> Anthropic's agentic framework. Emerging alternative to OpenClaw.</li>
+      <li><strong>n8n:</strong> No-code workflow automation. Being replaced by agentic equivalents but still useful for complex integrations.</li>
+      <li><strong>Kling 3.0 / Sora 2:</strong> Video generation quality is approaching cinema-grade. Major shift in content creation economics.</li>
+      <li><strong>Key AI / Fal AI / Wavespeed:</strong> API aggregators. Watch for pricing shifts and model availability changes.</li>
+    </ul>
+
+    <h3>Competitive Dynamics to Watch</h3>
+    <ul style="margin-left:20px;">
+      <li><strong>Proprietary data moats:</strong> Health trackers, food databases, investment data. APIs to personal data become more valuable.</li>
+      <li><strong>Template economy:</strong> Notion templates showed the playbook. Expect "AI agent templates" marketplaces (SimpleClaw, SetupClaw are prototypes).</li>
+      <li><strong>Managed service providers:</strong> "Deploy an AI marketing agent for your SaaS" becomes a $10k/month recurring service.</li>
+      <li><strong>Industry-specific agents:</strong> Real estate agents, healthcare administrative assistants, financial advisors. Vertical consolidation.</li>
+      <li><strong>Cost compression:</strong> Haiku pricing + multimodal APIs will enable hyper-personalized autonomous services at $5-20/mo price points.</li>
+    </ul>
+  </section>
+
+  <!-- OPENCLAW SETUP GUIDE -->
+  <section id="openclaw">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>OpenClaw Setup Guide</h2>
+    </div>
+    <p style="margin-bottom:24px;">Complete step-by-step guide to setting up OpenClaw on a Mac Mini as a fully operational personal AI agent. Based on a real setup building "Mr. Anderson" (Thomas Anderson / Neo).</p>
+
+    <p><strong>Version:</strong> 1.0 | March 2026</p>
+
+    <h3>What You Will Have When Done</h3>
+    <ul style="margin-left:20px;margin-bottom:20px;">
+      <li>An always-on AI agent running on a dedicated Mac Mini</li>
+      <li>iMessage and Telegram as communication channels</li>
+      <li>Full shell, file system, and browser access</li>
+      <li>Gmail, Calendar, and Google Drive integration</li>
+      <li>GitHub integration with automated workspace backups</li>
+      <li>Web search via Brave Search API</li>
+      <li>Automated daily briefings (morning and evening)</li>
+      <li>A dream routine that consolidates memory overnight</li>
+      <li>Health monitoring, cron job monitoring, and token budget tracking</li>
+      <li>A heartbeat system that checks in proactively throughout the day</li>
+    </ul>
+
+    <h3>Prerequisites</h3>
+    <ul style="margin-left:20px;margin-bottom:20px;">
+      <li>Mac Mini (Apple Silicon recommended, M2 or later)</li>
+      <li>macOS 15 (Sequoia) or later</li>
+      <li>Anthropic API key (recommended for instruction following)</li>
+      <li>Telegram account and bot token (from @BotFather)</li>
+      <li>Apple ID for iMessage on the Mini (dedicated bot account recommended)</li>
+      <li>GitHub account with personal access token</li>
+      <li>Google account for the bot (separate from personal Gmail)</li>
+      <li>Brave Search API key (optional but recommended)</li>
+      <li>2-3 hours of focused setup time</li>
+    </ul>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 1: Prepare the Mac Mini</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>1.1 Disable Sleep</h5>
+          <pre>sudo pmset -a sleep 0 disksleep 0 displaysleep 0
+sudo pmset -a hibernatemode 0 powernap 0
+sudo pmset -a standby 0 autopoweroff 0
+sudo pmset -a autorestart 1</pre>
+          <p>Verify with <code>pmset -g</code>. All sleep values should be 0, autorestart should be 1.</p>
+          <p>Create a caffeinate LaunchAgent as a failsafe:</p>
+          <pre>cat > ~/Library/LaunchAgents/com.openclaw.caffeinate.plist << 'EOF'
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+  &lt;key&gt;Label&lt;/key&gt;
+  &lt;string&gt;com.openclaw.caffeinate&lt;/string&gt;
+  &lt;key&gt;ProgramArguments&lt;/key&gt;
+  &lt;array&gt;
+    &lt;string&gt;/usr/bin/caffeinate&lt;/string&gt;
+    &lt;string&gt;-s&lt;/string&gt;
+  &lt;/array&gt;
+  &lt;key&gt;RunAtLoad&lt;/key&gt;&lt;true/&gt;
+  &lt;key&gt;KeepAlive&lt;/key&gt;&lt;true/&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+EOF
+
+launchctl load ~/Library/LaunchAgents/com.openclaw.caffeinate.plist</pre>
+
+          <h5>1.2 Enable FileVault</h5>
+          <p>System Settings > Privacy & Security > FileVault > Turn On. Store the recovery key safely.</p>
+
+          <h5>1.3 Firewall + Stealth Mode</h5>
+          <pre>sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on</pre>
+
+          <h5>1.4 Enable Remote Login (SSH)</h5>
+          <p>System Settings > General > Sharing > Remote Login > ON. Restrict to your user only.</p>
+
+          <h5>1.5 Install Homebrew</h5>
+          <pre>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</pre>
+          <p>After installation, run the PATH commands Homebrew prints. For Apple Silicon:</p>
+          <pre>echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"</pre>
+          <p>Verify: <code>brew --version</code></p>
+
+          <h5>1.6 Install Chrome</h5>
+          <p>Download and install Google Chrome. Set it as default browser: System Settings > Desktop & Dock > Default web browser > Google Chrome.</p>
+
+          <h5>1.7 Dedicated User Account (Optional)</h5>
+          <p>If this Mac Mini has personal data on it, create a standard (non-admin) user account for OpenClaw. If the Mini is a dedicated blank slate, skip this and run everything from your admin account.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 2: Install OpenClaw</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>2.1 Run the Installer</h5>
+          <pre>curl -fsSL https://openclaw.ai/install.sh | bash</pre>
+
+          <h5>2.2 Run the Onboarding Wizard</h5>
+          <pre>openclaw onboard --install-daemon</pre>
+          <p>During the wizard, select:</p>
+          <ul>
+            <li>Gateway mode: Local</li>
+            <li>AI Provider: Your choice (Anthropic recommended)</li>
+            <li>Bind address: 127.0.0.1 (loopback only)</li>
+            <li>Messaging channel: Telegram (create a bot via @BotFather first)</li>
+            <li>Skills: Skip entirely on first setup</li>
+            <li>Daemon: Yes, install the LaunchAgent</li>
+            <li>Runtime: Node (not Bun)</li>
+          </ul>
+
+          <h5>2.3 Verify the Bind Address</h5>
+          <pre>lsof -iTCP:18789 -sTCP:LISTEN</pre>
+          <p>You want to see <code>localhost:18789</code>. If you see <code>*:18789</code>, the gateway is exposed. Fix it immediately.</p>
+
+          <h5>2.4 Build the Complete Config (One Pass)</h5>
+          <p>Stop the gateway first:</p>
+          <pre>openclaw gateway stop</pre>
+          <p>Then write the complete config. Customize the values in CAPS:</p>
+          <pre>cat > ~/.openclaw/openclaw.json << 'ENDOFCONFIG'
+{
+  "wizard": {
+    "lastRunAt": "2026-01-01T00:00:00.000Z",
+    "lastRunVersion": "2026.3.2",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "YOUR_PROVIDER:default": {
+        "provider": "YOUR_PROVIDER",
+        "mode": "api_key"
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "YOUR_PROVIDER/YOUR_MODEL"
+      },
+      "models": {
+        "YOUR_PROVIDER/YOUR_MODEL": {}
+      },
+      "workspace": "/Users/YOUR_USERNAME/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      },
+      "heartbeat": {
+        "every": "30m",
+        "target": "bluebubbles",
+        "to": "YOUR_PHONE_NUMBER_E164",
+        "activeHours": {
+          "start": "07:30",
+          "end": "22:00",
+          "timezone": "YOUR_TIMEZONE"
+        }
+      }
+    }
+  },
+  "tools": {
+    "profile": "full",
+    "elevated": {
+      "enabled": true,
+      "allowFrom": {
+        "bluebubbles": ["*"],
+        "telegram": ["*"]
+      }
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "hooks": {
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "boot-md": {
+          "enabled": true
+        },
+        "bootstrap-extra-files": {
+          "enabled": true
+        },
+        "command-logger": {
+          "enabled": true
+        },
+        "session-memory": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "channels": {
+    "bluebubbles": {
+      "enabled": true,
+      "serverUrl": "http://YOUR_BLUEBUBBLES_IP:YOUR_PORT",
+      "password": "YOUR_BLUEBUBBLES_PASSWORD",
+      "webhookPath": "/bluebubbles-webhook",
+      "dmPolicy": "pairing",
+      "groupPolicy": "allowlist"
+    },
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "YOUR_TELEGRAM_BOT_TOKEN",
+      "groupPolicy": "allowlist",
+      "streaming": "partial"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "nodes": {
+      "denyCommands": []
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      },
+      "bluebubbles": {
+        "enabled": true
+      }
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.3.2",
+    "lastTouchedAt": "2026-01-01T00:00:00.000Z"
+  }
+}
+ENDOFCONFIG</pre>
+          <p>Replace all YOUR_ values with your actual credentials and preferences.</p>
+
+          <h5>2.5 Set Exec Approvals (One Pass)</h5>
+          <pre>cat > ~/.openclaw/exec-approvals.json << 'EOF'
+{
+  "version": 1,
+  "socket": {
+    "path": "/Users/YOUR_USERNAME/.openclaw/exec-approvals.sock",
+    "token": "LEAVE_EXISTING_OR_GENERATE"
+  },
+  "defaults": {
+    "security": "full",
+    "ask": "off",
+    "askFallback": "full",
+    "autoAllowSkills": true
+  },
+  "agents": {
+    "main": {
+      "security": "full",
+      "ask": "off",
+      "askFallback": "full",
+      "autoAllowSkills": true
+    }
+  }
+}
+EOF</pre>
+
+          <h5>2.6 Run Security Audit</h5>
+          <pre>openclaw security audit --deep
+openclaw security audit --fix
+chmod 700 ~/.openclaw
+chmod 600 ~/.openclaw/openclaw.json</pre>
+
+          <h5>2.7 Start the Gateway</h5>
+          <pre>openclaw gateway install
+openclaw gateway start</pre>
+          <p>Verify: <code>lsof -iTCP:18789 -sTCP:LISTEN</code></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 3: Set Up iMessage (BlueBubbles)</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>3.1 Install BlueBubbles</h5>
+          <p>Download from bluebubbles.app. macOS will block it initially. Go to System Settings > Privacy & Security and click "Open Anyway."</p>
+          <p>Grant Full Disk Access when prompted (required for reading the Messages database).</p>
+
+          <h5>3.2 Configure BlueBubbles</h5>
+          <ul>
+            <li>Skip Firebase/notification setup (not needed for OpenClaw integration)</li>
+            <li>Skip Private API setup (requires disabling SIP, not worth the tradeoff)</li>
+            <li>Proxy: Select "LAN URL" (not Cloudflare or any tunnel)</li>
+            <li>Set a strong server password</li>
+            <li>Note the LAN URL and port (e.g., http://192.168.1.21:1234)</li>
+            <li>Enable "Keep macOS Awake"</li>
+            <li>Auto Start Method: "Launch Agent (Crash Persistent)"</li>
+            <li>Enable "Start Minimized"</li>
+          </ul>
+
+          <h5>3.3 Wire BlueBubbles to OpenClaw</h5>
+          <p>These values should already be in your config from step 2.4. If not, add them to the channels section:</p>
+          <pre>{
+  "bluebubbles": {
+    "enabled": true,
+    "serverUrl": "http://YOUR_LAN_IP:YOUR_PORT",
+    "password": "YOUR_BLUEBUBBLES_PASSWORD",
+    "webhookPath": "/bluebubbles-webhook",
+    "dmPolicy": "pairing",
+    "groupPolicy": "allowlist"
+  }
+}</pre>
+          <p>In BlueBubbles, add a webhook URL: <code>http://localhost:18789/bluebubbles-webhook?password=YOUR_BLUEBUBBLES_PASSWORD</code></p>
+          <p>Restart the gateway: <code>openclaw gateway restart</code></p>
+
+          <h5>3.4 Pair iMessage</h5>
+          <p>Send an iMessage from your phone to the Apple ID signed in on the Mini. Then:</p>
+          <pre>openclaw pairing list --channel bluebubbles
+openclaw pairing approve --channel bluebubbles &lt;CODE&gt;</pre>
+          <p>Pairing codes expire after 1 hour.</p>
+
+          <h5>3.5 Pair Telegram</h5>
+          <p>Send a message to your Telegram bot, then:</p>
+          <pre>openclaw pairing list --channel telegram
+openclaw pairing approve --channel telegram &lt;CODE&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 4: Connect Services</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>4.1 Google Workspace (Gmail, Calendar, Drive)</h5>
+          <p><strong>Create a Dedicated Bot Gmail:</strong> Create a new Gmail account specifically for the agent (e.g., youragent.bot@gmail.com). Do not use your personal Gmail.</p>
+
+          <p><strong>Install gog:</strong></p>
+          <pre>npx clawhub@latest install gog
+brew install steipete/tap/gogcli</pre>
+
+          <p><strong>Set Up Google Cloud OAuth:</strong></p>
+          <ol style="margin-left:20px;">
+            <li>Go to console.cloud.google.com, sign in with the bot Gmail</li>
+            <li>Create a new project (e.g., "OpenClaw")</li>
+            <li>APIs & Services > Library > Enable: Gmail API, Google Calendar API, Google Drive API</li>
+            <li>APIs & Services > OAuth consent screen > External > Fill in app name and bot email > Add bot email as test user</li>
+            <li>APIs & Services > Credentials > Create Credentials > OAuth Client ID > Desktop app</li>
+            <li>Download the credentials JSON</li>
+          </ol>
+
+          <p><strong>Authenticate:</strong></p>
+          <pre>gog auth credentials ~/Downloads/client_secret_XXXXX.json
+gog auth login</pre>
+          <p>Sign in with the bot Gmail. Select all permissions. If you get "Access blocked," make sure the bot email is added as a test user in the OAuth consent screen.</p>
+
+          <h5>4.2 GitHub</h5>
+          <p>Create a fine-grained Personal Access Token:</p>
+          <ul>
+            <li>GitHub > Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens</li>
+            <li>Repository permissions: Contents (Read and write), Metadata (Read-only)</li>
+            <li>Scope to the repos you want the agent to access</li>
+          </ul>
+          <p>Give the token to the agent in chat and tell it to configure Git credentials.</p>
+
+          <h5>4.3 Brave Search API (Optional)</h5>
+          <p>Add the API key as an environment variable:</p>
+          <pre>echo 'export BRAVE_API_KEY="YOUR_KEY"' >> ~/.zprofile
+source ~/.zprofile</pre>
+          <p>Then tell the agent to store the key and create a brave-search skill.</p>
+
+          <h5>4.4 Browser Control</h5>
+          <p>Chrome should already be installed from Phase 1. OpenClaw manages its own browser instance via CDP. No additional configuration needed. The agent can open Chrome and interact with web pages through the browser tool.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 5: Identity and Operating Documents</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <p>Create all workspace files in one pass. These define who the agent is, how it operates, and what it knows.</p>
+
+          <h5>File Architecture</h5>
+          <table>
+            <tr><th>File</th><th>Purpose</th></tr>
+            <tr><td>IDENTITY.md</td><td>Factual: name, role, tools, access, boundaries, execution policy</td></tr>
+            <tr><td>SOUL.md</td><td>Personality, voice, philosophy, smoke detector protocol</td></tr>
+            <tr><td>AGENTS.md</td><td>Workflow: communication, memory management, mission control, quality bar</td></tr>
+            <tr><td>USER.md</td><td>About the user: who they are, how they think, current phase</td></tr>
+            <tr><td>BOOT.md</td><td>Session startup checklist, recovery protocol</td></tr>
+            <tr><td>HEARTBEAT.md</td><td>Proactive check-in cadence and rules</td></tr>
+            <tr><td>BRIEFING_TEMPLATES.md</td><td>News briefing format, sources, and protocols</td></tr>
+            <tr><td>MEMORY.md</td><td>Long-term curated memory, mission control state</td></tr>
+          </table>
+
+          <p><strong>Design Principles:</strong></p>
+          <ul>
+            <li>No duplication across files. Each piece of information lives in exactly one place.</li>
+            <li>IDENTITY.md is the operational quick-reference. Facts, access, boundaries.</li>
+            <li>SOUL.md is the personality guide. Voice, philosophy, what good and bad look like.</li>
+            <li>AGENTS.md is the workflow manual. Communication standards, memory management, guardrails.</li>
+            <li>Keep everything lean. Every token in always-loaded files competes with working context.</li>
+          </ul>
+
+          <p><strong>Key Sections to Include:</strong></p>
+          <p><strong>IDENTITY.md must contain:</strong></p>
+          <ul>
+            <li>Execution Policy: "When the user gives a direct instruction, execute it. Do not queue commands and ask for approval. The only exceptions are the Hard Red Lines."</li>
+            <li>Stakes-based autonomy rules (low/medium/high)</li>
+            <li>Hard Red Lines (never post publicly, never delete critical assets, never spend money, never represent user to third parties, never compromise privacy)</li>
+          </ul>
+
+          <p><strong>AGENTS.md must contain:</strong></p>
+          <ul>
+            <li>Verification Protocol: "After any file write or modification, read the file back and confirm by citing specific content."</li>
+            <li>Filesystem and Git Safety: "Never run git commands at ~/.openclaw/ root. Git operations target ~/.openclaw/workspace/ only."</li>
+            <li>Workspace Hygiene: "After modifying any workspace file, ask whether this content belongs in the system prompt, a skill, or memory."</li>
+            <li>Status Updates: "When a task is complete, confirm it. When it fails, report it. Never go silent on an active task."</li>
+          </ul>
+
+          <p>Write all files to <code>~/.openclaw/workspace/</code> using the <code>cat > file << 'EOF'</code> pattern.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 6: Backup System</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>6.1 Create a Private GitHub Repo</h5>
+          <p>Create a new private repo (e.g., "agent-brain"). Keep it empty.</p>
+
+          <h5>6.2 Initialize the Workspace Repo</h5>
+          <pre>cd ~/.openclaw/workspace
+git init
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git branch -M main
+
+cat > .gitignore << 'EOF'
+credentials/
+logs/
+.openclaw/
+telegram/
+agents/
+workspace/
+*.jsonl
+*.log
+.DS_Store
+node_modules/
+EOF
+
+git add -A
+git commit -m "initial brain snapshot"
+git push -u origin main</pre>
+
+          <h5>6.3 Install the Backup Skill</h5>
+          <p>Create <code>~/.openclaw/workspace/skills/backup/SKILL.md</code> with these critical safety rules:</p>
+          <ul>
+            <li>ONLY operate on <code>~/.openclaw/workspace/</code></li>
+            <li>NEVER run git commands at <code>~/.openclaw/</code> root</li>
+            <li>NEVER commit openclaw.json or exec-approvals.json</li>
+            <li>NEVER use git push --force unless explicitly requested</li>
+            <li>If a push fails, report the error. Do not attempt destructive fixes.</li>
+          </ul>
+
+          <h5>6.4 CRITICAL: Never Git-Track the Parent Directory</h5>
+          <p>The <code>~/.openclaw/</code> root directory contains <code>openclaw.json</code> (the gateway config with API keys), <code>exec-approvals.json</code>, credential files, and session data. Running <code>git init</code> here will eventually lead to the config file being overwritten or corrupted during push/pull operations. Only <code>~/.openclaw/workspace/</code> should be a Git repository.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 7: Cron Jobs and Automation</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <p>Add all cron jobs after the gateway is running and channels are paired.</p>
+
+          <h5>Daily Schedule</h5>
+          <pre># Dream routine: 3 AM - Memory consolidation, pattern detection
+openclaw cron add \
+  --name "Dream routine" \
+  --cron "0 3 * * *" \
+  --tz "YOUR_TIMEZONE" \
+  --session isolated \
+  --message "Run the dream routine: 1) Read all daily notes from the past 7 days. 2) Identify significant events, decisions, patterns. 3) Promote durable truths to MEMORY.md. 4) Remove outdated items. 5) Check for upcoming deadlines. 6) Write a dream log. 7) Run the backup skill. Do not message the user." \
+  --announce
+
+# Health check: 6:30 AM - Silent unless something is wrong
+openclaw cron add \
+  --name "Daily health check" \
+  --cron "30 6 * * *" \
+  --tz "YOUR_TIMEZONE" \
+  --session isolated \
+  --message "Verify: 1) Gateway bound to loopback. 2) openclaw.json exists and is valid JSON. 3) exec-approvals.json has security full and ask off. 4) Google API key valid. If ANY check fails, message the user immediately. If all pass, stay silent." \
+  --announce \
+  --channel bluebubbles \
+  --to "YOUR_PHONE_E164"
+
+# Morning briefing: 8 AM
+openclaw cron add \
+  --name "Morning briefing" \
+  --cron "0 8 * * *" \
+  --tz "YOUR_TIMEZONE" \
+  --session isolated \
+  --message "Read BRIEFING_TEMPLATES.md. Execute the Morning Briefing template. Gather sources, format per the template, deliver via iMessage." \
+  --announce \
+  --channel bluebubbles \
+  --to "YOUR_PHONE_E164"
+
+# Evening briefing + backup: 7 PM
+openclaw cron add \
+  --name "Evening briefing and backup" \
+  --cron "0 19 * * *" \
+  --tz "YOUR_TIMEZONE" \
+  --session isolated \
+  --message "Read BRIEFING_TEMPLATES.md and HEARTBEAT.md. Execute the Evening Briefing template. Write the daily note to memory. Run the backup skill to push workspace to GitHub. Deliver the summary via iMessage." \
+  --announce \
+  --channel bluebubbles \
+  --to "YOUR_PHONE_E164"
+
+# Token budget tracker: 10 PM - Silent unless unusual
+openclaw cron add \
+  --name "Token budget tracker" \
+  --cron "0 22 * * *" \
+  --tz "YOUR_TIMEZONE" \
+  --session isolated \
+  --message "Check today's API usage. Compare against 7-day average. If usage is more than 50% above average, message the user with details. If normal, stay silent." \
+  --announce \
+  --channel bluebubbles \
+  --to "YOUR_PHONE_E164"</pre>
+
+          <p>Verify all jobs: <code>openclaw cron list</code></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 8: Tailscale (Optional, for Remote Access)</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <p>Install Tailscale on the Mini and your other devices. Use Tailscale Serve (not Funnel) to expose the dashboard to your tailnet only.</p>
+          <pre>brew install tailscale
+# Or install from the Mac App Store</pre>
+          <p>After signing in and joining a tailnet:</p>
+          <pre>tailscale serve --bg 18789</pre>
+          <p>This allows you to access the Mini from anywhere on your tailnet without exposing anything to the public internet.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Phase 9: First Run and Verification</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>9.1 Test the Agent</h5>
+          <p>Send a message from your phone via iMessage. Verify the agent responds.</p>
+
+          <h5>9.2 Test a Briefing</h5>
+          <p>Tell the agent: "Run the morning briefing template as if it were 8 AM. Deliver it to iMessage."</p>
+          <p>Review the output. Adjust BRIEFING_TEMPLATES.md if needed.</p>
+
+          <h5>9.3 Test the Backup</h5>
+          <p>Tell the agent: "Back up the workspace to GitHub."</p>
+          <p>Verify the push appears on your GitHub repo. Confirm that only workspace files are present (no credentials/, logs/, openclaw.json, or session files).</p>
+
+          <h5>9.4 Verify Cron Jobs</h5>
+          <pre>openclaw cron list</pre>
+          <p>All jobs should show "idle" status with valid next run times.</p>
+
+          <h5>9.5 Run a Security Audit</h5>
+          <pre>openclaw security audit --deep</pre>
+          <p>Address any critical or warning items.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapsible">
+      <div class="collapsible-header">Appendices</div>
+      <div class="collapsible-content">
+        <div class="collapsible-body">
+          <h5>Appendix A: Daily Rhythm</h5>
+          <table>
+            <tr><th>Time</th><th>Event</th><th>Type</th><th>Behavior</th></tr>
+            <tr><td>3:00 AM</td><td>Dream routine</td><td>Cron</td><td>Memory consolidation, pattern detection, backup. Silent.</td></tr>
+            <tr><td>6:30 AM</td><td>Health check</td><td>Cron</td><td>Verifies gateway, config, keys. Silent if healthy.</td></tr>
+            <tr><td>7:30 AM+</td><td>Heartbeat starts</td><td>Heartbeat</td><td>Every 30 min until 10 PM.</td></tr>
+            <tr><td>8:00 AM</td><td>Morning briefing</td><td>Cron</td><td>News, priorities. Delivered to iMessage.</td></tr>
+            <tr><td>7:00 PM</td><td>Evening briefing</td><td>Cron</td><td>Day summary, news, backup. iMessage.</td></tr>
+            <tr><td>10:00 PM</td><td>Token budget</td><td>Cron</td><td>Checks API spend. Silent if normal.</td></tr>
+          </table>
+
+          <h5>Appendix B: File Architecture</h5>
+          <pre>~/.openclaw/
+  openclaw.json           # Gateway config (NEVER commit to Git)
+  exec-approvals.json     # Exec approval policy (NEVER commit to Git)
+  credentials/            # Channel credentials (NEVER commit to Git)
+  workspace/              # THE ONLY DIRECTORY THAT IS GIT-TRACKED
+    IDENTITY.md           # Factual: name, tools, access, boundaries
+    SOUL.md               # Personality, voice, philosophy
+    AGENTS.md             # Workflow, memory, guardrails, quality bar
+    USER.md               # About the user
+    BOOT.md               # Session startup checklist
+    HEARTBEAT.md          # Proactive check-in protocol
+    BRIEFING_TEMPLATES.md # News briefing format and sources
+    MEMORY.md             # Long-term curated memory
+    memory/               # Daily notes (YYYY-MM-DD.md)
+    skills/               # Custom skills
+      backup/SKILL.md     # Backup skill with safety rules
+    .gitignore            # Excludes sensitive directories</pre>
+
+          <h5>Appendix C: Troubleshooting</h5>
+          <p><strong>Gateway won't start / times out:</strong></p>
+          <ol>
+            <li><code>openclaw gateway stop</code> (wait 5 seconds)</li>
+            <li><code>openclaw gateway start</code></li>
+            <li>If still failing: <code>tail -30 ~/.openclaw/logs/gateway.log</code></li>
+            <li>If the LaunchAgent was unloaded: <code>openclaw gateway install && openclaw gateway start</code></li>
+          </ol>
+
+          <p><strong>Agent asks for approval on every command:</strong></p>
+          <ol>
+            <li>Check <code>~/.openclaw/exec-approvals.json</code> has security: "full" and ask: "off"</li>
+            <li>Check the Control UI (Nodes > Exec Approvals) shows Full/Off</li>
+            <li>Restart the gateway after changes</li>
+          </ol>
+
+          <p><strong>BlueBubbles not receiving messages:</strong></p>
+          <ol>
+            <li>Verify BlueBubbles app is running on the Mini</li>
+            <li>Verify iMessage is signed in on the Mini</li>
+            <li>Check the webhook URL in BlueBubbles settings</li>
+            <li>Restart the gateway</li>
+          </ol>
+
+          <h5>Appendix D: Key Credentials to Track</h5>
+          <p>Keep a secure record of these (not in the Git repo):</p>
+          <ul>
+            <li>AI provider API key</li>
+            <li>Gateway auth token (in openclaw.json)</li>
+            <li>Telegram bot token</li>
+            <li>BlueBubbles server password</li>
+            <li>Google OAuth client secret</li>
+            <li>GitHub PAT</li>
+            <li>Brave Search API key</li>
+            <li>Exec approvals socket token</li>
+          </ul>
+
+          <h5>Lessons Learned (Avoid These Mistakes)</h5>
+          <ol>
+            <li><strong>Edit the config file once.</strong> The original setup required opening <code>~/.openclaw/openclaw.json</code> over a dozen times. This guide has you build the complete config in one pass.</li>
+            <li><strong>Never initialize Git at ~/.openclaw/ root.</strong> Only the workspace (<code>~/.openclaw/workspace/</code>) should be a Git repo.</li>
+            <li><strong>Never use git push --force on config directories.</strong> The agent may attempt this if a push fails. The operating docs should explicitly forbid it.</li>
+            <li><strong>Set exec approvals before giving the agent tasks.</strong> The default approval settings gate every shell command behind a Terminal prompt.</li>
+            <li><strong>Don't restart the gateway rapidly.</strong> If a restart times out, do a <code>stop</code>, wait 5 seconds, then <code>start</code>.</li>
+            <li><strong>Verify file operations independently.</strong> LLMs will sometimes report success without completing the task. Build a verification protocol into your operating docs.</li>
+            <li><strong>Install Homebrew and add it to PATH before running the OpenClaw installer.</strong> The installer tries to install Homebrew itself but fails because stdin isn't a TTY during piped installs.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LINKS & RESOURCES -->
+  <section id="links">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Links &amp; Resources</h2>
+    </div>
+
+    <h3>RoboNuggets (Jay's Channel)</h3>
+    <div class="links-grid">
+      <div class="link-card">
+        <div>
+          <div class="lc-name">RoboNuggets Skool Community</div>
+          <div class="lc-desc">Daily updates on OpenClaw use cases and emerging techniques</div>
+        </div>
+        <div class="lc-tag">Community</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">CRT Framework Resources (R56)</div>
+          <div class="lc-desc">Complete setup templates for CLAUDE.md, References, Tools</div>
+        </div>
+        <div class="lc-tag">Setup</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Blotato Skill Pack (R57)</div>
+          <div class="lc-desc">Best practices for integrating Blotato with agents</div>
+        </div>
+        <div class="lc-tag">Skills</div>
+      </div>
+    </div>
+
+    <h3>Tools & Platforms</h3>
+    <div class="links-grid">
+      <div class="link-card">
+        <div>
+          <div class="lc-name">OpenClaw</div>
+          <div class="lc-desc">Open-source AI agent for messaging platforms</div>
+        </div>
+        <div class="lc-tag">Core</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Antigravity</div>
+          <div class="lc-desc">Google's agentic platform with Workspace integration</div>
+        </div>
+        <div class="lc-tag">Platform</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Claude Code</div>
+          <div class="lc-desc">Anthropic's CLI for autonomous coding tasks</div>
+        </div>
+        <div class="lc-tag">Tools</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Airtable</div>
+          <div class="lc-desc">Database for managing creative assets and campaigns</div>
+        </div>
+        <div class="lc-tag">Data</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Blotato</div>
+          <div class="lc-desc">AI content engine for multi-platform scheduling</div>
+        </div>
+        <div class="lc-tag">Content</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Modal.com</div>
+          <div class="lc-desc">Serverless compute for always-on automations</div>
+        </div>
+        <div class="lc-tag">Deploy</div>
+      </div>
+    </div>
+
+    <h3>API Aggregators</h3>
+    <div class="links-grid">
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Google AI Studio</div>
+          <div class="lc-desc">$300 free credit per Gmail account. Nano Banana Pro & VO 3.1</div>
+        </div>
+        <div class="lc-tag">Free</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Key AI</div>
+          <div class="lc-desc">Cheapest API prices with competitive uptime</div>
+        </div>
+        <div class="lc-tag">Budget</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Fal AI</div>
+          <div class="lc-desc">400+ models, reliable, battle-tested infrastructure</div>
+        </div>
+        <div class="lc-tag">Reliable</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Wavespeed AI</div>
+          <div class="lc-desc">Competitive pricing, good fallback option</div>
+        </div>
+        <div class="lc-tag">Backup</div>
+      </div>
+    </div>
+
+    <h3>Model Providers</h3>
+    <div class="links-grid">
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Anthropic (Claude)</div>
+          <div class="lc-desc">Recommended for agent work. Strong instruction following.</div>
+        </div>
+        <div class="lc-tag">LLM</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">OpenAI (GPT, DALL-E)</div>
+          <div class="lc-desc">Image generation and text models</div>
+        </div>
+        <div class="lc-tag">Models</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Kling AI (Kling 3.0)</div>
+          <div class="lc-desc">Cinematic 60fps video generation</div>
+        </div>
+        <div class="lc-tag">Video</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">OpenAI (Sora 2 Pro)</div>
+          <div class="lc-desc">Ultra-high quality long-form video</div>
+        </div>
+        <div class="lc-tag">Video</div>
+      </div>
+    </div>
+
+    <h3>Communication & Channels</h3>
+    <div class="links-grid">
+      <div class="link-card">
+        <div>
+          <div class="lc-name">BlueBubbles</div>
+          <div class="lc-desc">iMessage bridge for OpenClaw on Mac</div>
+        </div>
+        <div class="lc-tag">iMessage</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Telegram (@BotFather)</div>
+          <div class="lc-desc">Create and manage bot tokens</div>
+        </div>
+        <div class="lc-tag">Messaging</div>
+      </div>
+    </div>
+
+    <h3>People to Follow</h3>
+    <div class="links-grid">
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Jay (RoboNuggets)</div>
+          <div class="lc-desc">Leading voice on OpenClaw use cases and CRT framework</div>
+        </div>
+        <div class="lc-tag">Creator</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">Matthew Berman</div>
+          <div class="lc-desc">Security-first agent design patterns</div>
+        </div>
+        <div class="lc-tag">Expert</div>
+      </div>
+      <div class="link-card">
+        <div>
+          <div class="lc-name">FXNCTION (Twitter)</div>
+          <div class="lc-desc">AI-driven investment and portfolio monitoring</div>
+        </div>
+        <div class="lc-tag">Research</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<footer>
+  <p><strong>AI Field Manual</strong></p>
+  <p>Last updated March 5, 2026. Neon Noir design system.</p>
+</footer>
+
+<script>
+// Section navigation
+const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section');
+const hamburger = document.getElementById('hamburger');
+const sidebar = document.getElementById('sidebar');
+
+function showSection(sectionId) {
+  // Hide all sections
+  sections.forEach(s => s.classList.remove('active'));
+  // Show selected section
+  const selected = document.getElementById(sectionId);
+  if (selected) {
+    selected.classList.add('active');
+    // Add staggered entrance animation to children
+    applyStaggeredAnimation(selected);
+  }
+
+  // Update nav
+  navLinks.forEach(link => link.classList.remove('active'));
+  document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+  // Close sidebar on mobile
+  if (window.innerWidth < 768) {
+    sidebar.classList.remove('open');
+    hamburger.classList.remove('open');
+  }
+}
+
+// Apply staggered entrance animation to grid items and list items
+function applyStaggeredAnimation(section) {
+  const animatableItems = section.querySelectorAll(
+    '.video-card, .framework, .phase, .link-card, .item-list li, .collapsible'
+  );
+  
+  animatableItems.forEach((item, index) => {
+    item.style.animation = 'none'; // Reset animation
+    // Trigger reflow to restart animation
+    void item.offsetWidth;
+    item.style.animation = `staggerIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${index * 60}ms forwards`;
+  });
+}
+
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const sectionId = link.getAttribute('data-section');
+    showSection(sectionId);
+  });
+});
+
+// Mobile hamburger menu
+hamburger.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  hamburger.classList.toggle('open');
+});
+
+// Collapsible sections
+const collapsibles = document.querySelectorAll('.collapsible');
+collapsibles.forEach(collapsible => {
+  const header = collapsible.querySelector('.collapsible-header');
+  header.addEventListener('click', () => {
+    collapsible.classList.toggle('open');
+  });
+});
+
+// Filter action items
+const filterBtns = document.querySelectorAll('.filter-btn');
+const actionItems = document.querySelectorAll('#action-list li');
+
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.getAttribute('data-filter');
+
+    // Update active button
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Filter items
+    actionItems.forEach(item => {
+      if (filter === 'all') {
+        item.style.display = 'block';
+      } else {
+        const status = item.getAttribute('data-status');
+        item.style.display = status === filter ? 'block' : 'none';
+      }
+    });
+  });
+});
+
+// Update progress
+function updateProgress() {
+  const done = Array.from(actionItems).filter(item => item.getAttribute('data-status') === 'done').length;
+  const total = actionItems.length;
+  document.getElementById('progress-done').textContent = done;
+  document.getElementById('progress-total').textContent = total;
+  const percent = (done / total) * 100;
+  document.getElementById('progress-fill').style.width = percent + '%';
+}
+
+updateProgress();
+
+// Apply staggered animation to initial section
+const initialSection = document.querySelector('section.active');
+if (initialSection) {
+  applyStaggeredAnimation(initialSection);
+}
+</script>
+
+</body>
+</html>
