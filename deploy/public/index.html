@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Agent Masterclass — Zev</title>
 <meta property="og:title" content="AI Agent Masterclass">
-<meta property="og:description" content="13 sections covering Claude Code CLI, skills, automation, storyboards, marketing pipelines, and the full AI agent toolkit.">
+<meta property="og:description" content="14 sections covering Claude Code CLI, power setup, skills, automation, storyboards, marketing pipelines, and the full AI agent toolkit.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ai-agent-masterclass.vercel.app">
 <meta name="description" content="Zev's AI Agent Masterclass - notes, workflows, action items, and frameworks for building an AI agent environment.">
@@ -846,10 +846,10 @@
   <h1>AI Agent <span>Masterclass</span></h1>
   <p class="hero-sub">Notes, workflows, action items, and frameworks from Zev's AI agent environment.</p>
   <div class="hero-meta">
-    <span><strong>13</strong> Sections</span>
+    <span><strong>14</strong> Sections</span>
     <span><strong>23</strong> Action Items</span>
-    <span><strong>13</strong> Skills</span>
-    <span>March 8, 2026</span>
+    <span><strong>15</strong> Skills</span>
+    <span>March 22, 2026</span>
   </div>
   <div class="progress-wrap" id="progress-link" style="cursor:pointer;" title="View all action items">
     <div class="progress-label"><strong id="progress-done">0</strong> / <span id="progress-total">23</span> items complete</div>
@@ -873,7 +873,8 @@
     <li><a href="#" data-section="claudecode" class="nav-link"><span class="sidebar-num">10</span>Claude Code CLI</a></li>
     <li><a href="#" data-section="openclaw" class="nav-link"><span class="sidebar-num">11</span>OpenClaw Setup</a></li>
     <li><a href="#" data-section="providers" class="nav-link"><span class="sidebar-num">12</span>Model Providers</a></li>
-    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">13</span>Links &amp; Resources</a></li>
+    <li><a href="#" data-section="powersetup" class="nav-link"><span class="sidebar-num">13</span>Power Setup Guide</a></li>
+    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">14</span>Links &amp; Resources</a></li>
   </ul>
 </nav>
 
@@ -1069,9 +1070,9 @@
         <p>Monitor relevant YouTube channels, auto-pull transcripts via Blotato, generate blog summaries and infographics, schedule posts. Deploy via Modal.com for always-on automation. Repurpose for your own marketing.</p>
         <span class="tag tag-priority">High Priority</span><span class="tag tag-action">Actionable</span>
       </li>
-      <li data-status="todo">
-        <strong>Set Up Blotato + Antigravity Pipeline <span class="status-badge status-todo">To Do</span></strong>
-        <p>Sign up for Blotato ($29/mo Starter), connect social accounts, install MCP connector in Antigravity, download RoboNuggets skill (R57).</p>
+      <li data-status="done">
+        <strong>Set Up Blotato + Antigravity Pipeline <span class="status-badge status-done">Done</span></strong>
+        <p>Blotato MCP connected to Claude Code (HTTP, https://mcp.blotato.com/mcp). Instagram @theartistbungalow linked. Social publishing and scheduling active.</p>
         <span class="tag tag-action">Actionable</span>
       </li>
       <li data-status="todo">
@@ -1091,7 +1092,7 @@
       </li>
       <li data-status="done">
         <strong>Version-Control Claude Code Config <span class="status-badge status-done">Done</span></strong>
-        <p>Private GitHub repo (zwaismann/claude-code-config) tracks all 11 skills, 3 automation scripts, 3 LaunchAgents, CLAUDE.md, and MEMORY.md. Includes setup.sh for new machine provisioning and sync.sh for pulling live changes.</p>
+        <p>Private GitHub repo (zwaismann/claude-code-config) tracks all 15 skills, automation scripts, 3 LaunchAgents, CLAUDE.md, MEMORY.md, and OPERATOR_INBOX.md. Includes setup.sh for new machine provisioning and sync.sh for pulling live changes. Shared between MacBook Pro and Mac Mini.</p>
         <span class="tag tag-action">Actionable</span>
       </li>
       <li data-status="done">
@@ -1111,7 +1112,7 @@
       </li>
       <li data-status="done">
         <strong>Automate Daily Workflows via LaunchAgents <span class="status-badge status-done">Done</span></strong>
-        <p>Three LaunchAgents running: AI Daily Digest (7am), Real Estate Scan (7:30am), Airbnb Hosting Check (4x daily). Plus 6 in-session cron backups re-enabled each session. All scripts use claude --print for headless execution.</p>
+        <p>Two-machine architecture: Mac Mini handles AI Daily Digest (7am+5pm), Real Estate Scan (7:30am+5:30pm), Furniture Finds (7:45am+5:45pm), Airbnb (4x daily), nightly maintenance. Laptop runs Health Check (9am) and Weekly Reminder (Sunday 10am) via LaunchAgents. All scripts in ~/.claude/automation/.</p>
         <span class="tag tag-action">Actionable</span>
       </li>
     </ul>
@@ -1366,7 +1367,7 @@
       <li><strong>OpenClaw:</strong> Still the fastest-growing open-source AI agent. Peter Steinberger now at OpenAI, mass-market version likely coming.</li>
       <li><strong>Antigravity:</strong> Google's agentic platform. Tight integration with Workspace, Search, and advertising.</li>
       <li><strong>Codex:</strong> OpenAI's agentic coding platform. Pairs with GPT-5.x models for autonomous development tasks.</li>
-      <li><strong>Claude Code:</strong> Anthropic's CLI agent. Zev's primary daily driver. Full setup documented in Section 10. 13 custom skills, 4 MCP integrations, LaunchAgent automation, document creation, browser automation, version-controlled config repo.</li>
+      <li><strong>Claude Code:</strong> Anthropic's CLI agent. Zev's primary daily driver. Full setup documented in Section 10. 15 custom skills, 5 MCP integrations (GitHub, Airtable, Blotato, Gmail, Calendar), two-machine LaunchAgent automation, document creation, browser automation, version-controlled config repo.</li>
       <li><strong>n8n:</strong> No-code workflow automation. Being replaced by agentic equivalents but still useful for complex integrations.</li>
       <li><strong>Kling 3.0 / Sora 2:</strong> Video generation quality is approaching cinema-grade. Major shift in content creation economics.</li>
       <li><strong>Key AI / Fal AI / Wavespeed:</strong> API aggregators. Watch for pricing shifts and model availability changes.</li>
@@ -1412,12 +1413,13 @@
       </ul>
     </div></div>
 
-    <div class="phase"><div class="phase-num">2</div><div><h4>MCP Integrations (4 Active)</h4>
+    <div class="phase"><div class="phase-num">2</div><div><h4>MCP Integrations (5 Active)</h4>
       <div class="table-wrap" style="margin-top:12px;">
         <table>
           <tr><th>Service</th><th>Package / Connector</th><th>Auth</th><th>Config Location</th></tr>
           <tr><td>GitHub</td><td><code>@modelcontextprotocol/server-github</code></td><td>OAuth token in <code>~/.claude.json</code></td><td><code>~/.claude.json</code> mcpServers.github</td></tr>
           <tr><td>Airtable</td><td><code>airtable-mcp-server</code> (npx)</td><td>PAT in <code>~/.claude.json</code></td><td><code>~/.claude.json</code> mcpServers.airtable</td></tr>
+          <tr><td>Blotato</td><td>HTTP MCP (<code>https://mcp.blotato.com/mcp</code>)</td><td>API key in <code>Marketing/references/.env</code></td><td><code>~/.claude.json</code> mcpServers.blotato</td></tr>
           <tr><td>Gmail</td><td>Claude.ai managed connector</td><td>Google OAuth (browser)</td><td>Settings > MCP in Claude Code</td></tr>
           <tr><td>Google Calendar</td><td>Claude.ai managed connector</td><td>Google OAuth (browser)</td><td>Settings > MCP in Claude Code</td></tr>
         </table>
@@ -1434,7 +1436,7 @@
       </ul>
     </div></div>
 
-    <h3>Custom Skills (13 Total)</h3>
+    <h3>Custom Skills (15 Total)</h3>
     <p class="dim" style="margin-bottom:16px;">Each skill is a <code>SKILL.md</code> file in <code>~/.claude/skills/[name]/</code>. Invoked via <code>/skill-name</code> in the CLI. Mirrored to <code>~/Desktop/Claude/.claude/skills/</code> for project-level access. Click any skill to expand full details.</p>
 
     <!-- SESSION-START -->
@@ -1541,7 +1543,7 @@
             <tr><td>Google Calendar</td><td>gcal_list_calendars</td><td>Returns primary calendar</td></tr>
             <tr><td>GitHub</td><td>search_repositories (user:zwaismann)</td><td>Returns repos including Portfolio</td></tr>
             <tr><td>Airtable</td><td>list_bases</td><td>Returns bases including Nihongo Daily (appYeMQwdBrZjcLLi)</td></tr>
-            <tr><td>Google Drive</td><td>-</td><td>NOT YET CONFIGURED</td></tr>
+            <tr><td>Blotato</td><td>blotato_get_user</td><td>Returns connected accounts</td></tr>
           </table>
         </div>
         <p><strong>Output:</strong> Status table (Working / Not available / Error) with troubleshooting for any failures</p>
@@ -1773,6 +1775,56 @@
       </div></div>
     </div>
 
+    <!-- WATCHLIST -->
+    <div class="collapsible">
+      <div class="collapsible-header">/watchlist <span class="status-badge status-done" style="margin-left:auto;">Real Estate</span></div>
+      <div class="collapsible-content"><div class="collapsible-body">
+        <p><strong>Trigger:</strong> "watchlist," "add this property," "drop this listing," "what am I watching," "track this"</p>
+        <p><strong>What it does:</strong> Manages the real estate property watchlist for the daily briefing. Add, remove, or view properties being monitored across Los Angeles and Ashland OR markets.</p>
+        <h5>Capabilities</h5>
+        <ul>
+          <li>Add/remove properties from the watchlist</li>
+          <li>View all currently tracked properties</li>
+          <li>Syncs with Mac Mini via OPERATOR_INBOX.md + git push</li>
+        </ul>
+        <p><strong>Dependencies:</strong> claude-code-config repo, OPERATOR_INBOX.md</p>
+      </div></div>
+    </div>
+
+    <!-- SKILL-CREATOR -->
+    <div class="collapsible">
+      <div class="collapsible-header">/skill-creator <span class="status-badge status-done" style="margin-left:auto;">Meta</span></div>
+      <div class="collapsible-content"><div class="collapsible-body">
+        <p><strong>Trigger:</strong> "create a skill," "edit skill," "improve skill," "test skill," "skill performance"</p>
+        <p><strong>What it does:</strong> Creates new skills, modifies existing skills, runs evals to test them, benchmarks performance with variance analysis, and optimizes descriptions for better triggering accuracy.</p>
+        <h5>Workflow</h5>
+        <ol>
+          <li>Define skill spec (trigger words, behavior, output format)</li>
+          <li>Generate SKILL.md with proper frontmatter</li>
+          <li>Run parallel test agents to evaluate triggering accuracy</li>
+          <li>Iterate on description and logic until reliable</li>
+        </ol>
+        <p><strong>Dependencies:</strong> None (file operations only)</p>
+      </div></div>
+    </div>
+
+    <!-- BUILD-APP -->
+    <div class="collapsible">
+      <div class="collapsible-header">/build-app <span class="status-badge status-done" style="margin-left:auto;">Development</span></div>
+      <div class="collapsible-content"><div class="collapsible-body">
+        <p><strong>Trigger:</strong> "build me an app," "architect this," "create a build plan," "break this into prompts," "decompose this project"</p>
+        <p><strong>What it does:</strong> Decomposes, plans, and builds applications using the Decompose-Verify-Parallelize methodology. Breaks large projects into agent-team-executable prompts with strict file ownership and verification gates.</p>
+        <h5>Key Principles</h5>
+        <ul>
+          <li>Decompose into independently completable subtasks</li>
+          <li>Define interfaces upfront before implementation</li>
+          <li>Strict file ownership (no two agents edit the same file)</li>
+          <li>Verify at every gate (build, test, run, checklist, commit)</li>
+        </ul>
+        <p><strong>Not for:</strong> Small bug fixes, single-file changes, or quick scripts</p>
+      </div></div>
+    </div>
+
     <h3>Session Startup Checklist</h3>
     <p class="dim" style="margin-bottom:16px;">Run at the start of every new Claude Code session to restore the full automation environment.</p>
     <div class="video-card">
@@ -1783,15 +1835,13 @@
         <li><code>~/Desktop/Claude/user_zw.md</code></li>
       </ul>
 
-      <h4>2. Re-enable Session Crons</h4>
-      <p style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">These expire after 3 days and must be re-created each session:</p>
-      <pre style="font-size:11px;margin-bottom:12px;">3 7 * * *    AI Daily Digest
-33 7 * * *   Real Estate Scan
-3 8 * * *    Airbnb 8am check
+      <h4>2. Re-enable Session Crons (Optional Backups)</h4>
+      <p style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">Most automation now runs via LaunchAgents or Mac Mini. These in-session crons are optional backups (expire after 3 days):</p>
+      <pre style="font-size:11px;margin-bottom:12px;">3 8 * * *    Airbnb 8am check
 3 12 * * *   Airbnb 12pm check
 3 16 * * *   Airbnb 4pm check
-3 20 * * *   Airbnb 8pm check
-0 10 * * 0   Weekly Sunday reminder (update user_zw.md + MASTER_HUB.md)</pre>
+3 20 * * *   Airbnb 8pm check</pre>
+      <p style="font-size:11px;color:var(--text-dim);">Note: AI Daily Digest, Real Estate Scan, and Furniture Finds now run on Mac Mini only. Weekly reminder and Health Check run via laptop LaunchAgents (persistent, no re-creation needed).</p>
 
       <h4>3. Verify MCP Connections</h4>
       <p style="font-size:11px;color:var(--text-dim);">Run <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">/check-connections</code> if anything feels broken. Otherwise, MCP servers auto-start.</p>
@@ -1800,18 +1850,30 @@
       <p style="font-size:11px;color:var(--text-dim);">MASTER_HUB.md items sitting 1+ week, user_zw.md last-updated date > 7 days, any open action items from previous sessions.</p>
     </div>
 
-    <h3>Automated Pipelines</h3>
-    <p class="dim" style="margin-bottom:16px;">Three macOS LaunchAgents run headless via <code>claude --print</code>. Six in-session cron backups re-enabled each session start. All scripts live in <code>~/Desktop/Claude/Scripts/</code>.</p>
+    <h3>Automated Pipelines (Two-Machine Architecture)</h3>
+    <p class="dim" style="margin-bottom:16px;">Automation spans two machines: MacBook Pro (interactive sessions) and Mac Mini (always-on ops server at 192.168.1.179). Communication via OPERATOR_INBOX.md in the shared claude-code-config GitHub repo. All laptop scripts live in <code>~/.claude/automation/</code>.</p>
+    <h4>Mac Mini (mr.anderson@Mac.home.local)</h4>
+    <div class="table-wrap" style="margin-bottom:16px;">
+      <table>
+        <tr><th>Pipeline</th><th>Schedule</th><th>What It Does</th></tr>
+        <tr><td>AI Daily Digest</td><td>7:00 AM + 5:00 PM</td><td>Searches AI news, compiles digest, emails to zwaismann@gmail.com</td></tr>
+        <tr><td>Real Estate Scan</td><td>7:30 AM + 5:30 PM</td><td>Scans listings matching criteria, emails results</td></tr>
+        <tr><td>Furniture Finds</td><td>7:45 AM + 5:45 PM</td><td>Scans furniture/decor deals, emails results</td></tr>
+        <tr><td>Airbnb Check</td><td>4x daily</td><td>Checks messages, pricing, reviews</td></tr>
+        <tr><td>Nightly Maintenance</td><td>Overnight</td><td>System cleanup and health verification</td></tr>
+        <tr><td>Bungalow Summary</td><td>Daily</td><td>Consolidated Airbnb property summary</td></tr>
+      </table>
+    </div>
+    <h4>MacBook Pro (this laptop)</h4>
     <div class="table-wrap">
       <table>
         <tr><th>Pipeline</th><th>Schedule</th><th>Method</th><th>What It Does</th></tr>
-        <tr><td>AI Daily Digest</td><td>7:00 AM daily</td><td>LaunchAgent + cron backup</td><td>Searches AI news, compiles digest, emails to zwaismann@gmail.com</td></tr>
-        <tr><td>Real Estate Scan</td><td>7:30 AM daily</td><td>LaunchAgent + cron backup</td><td>Scans listings matching criteria, emails results</td></tr>
-        <tr><td>Airbnb Check</td><td>8am, 12pm, 4pm, 8pm</td><td>In-session cron only</td><td>Checks messages, pricing, reviews. Requires headed browser login</td></tr>
-        <tr><td>Weekly Hygiene</td><td>Sunday 10:00 AM</td><td>In-session cron</td><td>Reminder to update user_zw.md and MASTER_HUB.md</td></tr>
+        <tr><td>Health Check</td><td>9:00 AM daily</td><td>LaunchAgent</td><td>Verifies all agents ran, checks heartbeats and stderr logs, sends alert email + notification on failures</td></tr>
+        <tr><td>Weekly Reminder</td><td>Sunday 10:00 AM</td><td>LaunchAgent</td><td>Notification + email to update user_zw.md and MASTER_HUB.md</td></tr>
+        <tr><td>Airbnb Check</td><td>Paused</td><td>LaunchAgent (unloaded)</td><td>Paused Mar 15, 2026 - Mac Mini handles. Re-enable with <code>launchctl load</code></td></tr>
       </table>
     </div>
-    <p class="dim" style="margin-top:8px;">LaunchAgent plists stored at <code>~/Library/LaunchAgents/com.claude.*.plist</code>. Known issue: macOS quarantine (<code>com.apple.provenance</code>) xattrs can block scripts launched by launchd. Fix with <code>xattr -d com.apple.provenance script.sh</code>.</p>
+    <p class="dim" style="margin-top:8px;">LaunchAgent plists at <code>~/Library/LaunchAgents/com.claude.*.plist</code>. Scripts in <code>~/.claude/automation/</code> (moved from Desktop to avoid TCC blocks). Known issue: <code>com.apple.provenance</code> xattrs block launchd execution in TCC-protected dirs. Fix: keep scripts in <code>~/.claude/</code>, not <code>~/Desktop/</code>.</p>
 
     <h3>CLAUDE.md Best Practices</h3>
     <div class="video-card">
@@ -1842,7 +1904,7 @@
     <div class="video-card">
       <p>The entire Claude Code CLI config is tracked in a private GitHub repo: <strong>zwaismann/claude-code-config</strong></p>
       <pre style="margin-top:12px;">claude-code-config/
-  skills/           # 11 skill directories (SKILL.md files)
+  skills/           # 15 skill directories (SKILL.md files)
   scripts/          # 6 automation scripts
   launchagents/     # 3 LaunchAgent plists
   memory/           # MEMORY.md snapshot
@@ -2328,10 +2390,145 @@ fi</pre>
     </ul>
   </section>
 
+  <!-- CLAUDE CODE POWER SETUP -->
+  <section id="powersetup">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <h2>Claude Code Power Setup</h2>
+    </div>
+    <p style="margin-bottom:24px;">A step-by-step configuration guide for a production-level Claude Code environment. Built around context window management, sub-agent architecture, and up-to-date documentation access. Total setup time: roughly 15-20 minutes.</p>
+    <p style="margin-bottom:24px;font-size:11px;color:var(--text-dim);"><strong>Source:</strong> Electra Filmworks | AI Masterclass Daily Briefing - March 2026</p>
+
+    <h3>What You Will Install</h3>
+    <div class="table-wrap" style="margin-bottom:24px;">
+      <table>
+        <tr><th>Tool</th><th>Purpose</th></tr>
+        <tr><td>ccstatusline</td><td>Visual context window monitoring in your terminal</td></tr>
+        <tr><td>Superpowers</td><td>Sub-agent orchestration for spec-driven development</td></tr>
+        <tr><td>Code Simplifier</td><td>Code cleanup and simplification plugin</td></tr>
+        <tr><td>Sequential Thinking</td><td>MCP server for deeper chain-of-thought reasoning</td></tr>
+        <tr><td>Context7</td><td>Up-to-date API and library documentation</td></tr>
+        <tr><td>Warp Terminal</td><td>AI-native terminal with file browsing and split panes</td></tr>
+      </table>
+    </div>
+
+    <h3>Step 1: Install the Context Status Line</h3>
+    <div class="phase"><div class="phase-num">1</div><div>
+      <p>The context window is where Claude stores everything about your current session. As it fills up, Claude starts forgetting earlier instructions and writing duplicate or broken code. A status line lets you monitor this in real time.</p>
+      <h4>Install</h4>
+      <p>Run this in your terminal before launching Claude Code:</p>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>npx ccstatusline@latest</code></pre>
+      <p>This opens an interactive configuration tool. Set up two lines:</p>
+      <ul>
+        <li><strong>Line 1:</strong> Model | Context Percentage | Session Cost | Session Clock</li>
+        <li><strong>Line 2:</strong> Git Branch | Git Worktree</li>
+      </ul>
+      <p style="margin-top:8px;">Press <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">Ctrl+S</code> to save your configuration, then restart Claude Code.</p>
+      <h4>The 50% Rule</h4>
+      <p>Once your context percentage hits around 50%, Claude is already degrading. Start a fresh session rather than pushing further. <strong>Do not use the /compact command.</strong> It creates a worst-of-both-worlds situation where you lose useful context but retain noise from earlier in the session.</p>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Tip: Think of context like short-term memory. The more you cram in, the more the earlier stuff gets fuzzy. Fresh sessions give Claude a clean slate.</p>
+    </div></div>
+
+    <h3>Step 2: Install Superpowers Plugin</h3>
+    <div class="phase"><div class="phase-num">2</div><div>
+      <p>Superpowers transforms Claude Code from ad hoc prompting into structured, spec-driven development using sub-agents. Each sub-agent runs in its own context window, so your main session stays clean.</p>
+      <h4>Install</h4>
+      <p>Inside Claude Code, type:</p>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugins</code></pre>
+      <p>Find and add <strong>superpowers</strong>. When prompted, install for user scope.</p>
+      <h4>The Three-Command Workflow</h4>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Command</th><th>What It Does</th></tr>
+          <tr><td><code>superpowers brainstorm</code></td><td>Start any new feature or project here. Claude explores context, asks clarifying questions, proposes 2-3 approaches, and produces a spec document for your approval. Review everything it proposes - do not just click yes.</td></tr>
+          <tr><td><code>superpowers write plan</code></td><td>Takes your approved spec and turns it into a detailed implementation plan with line-by-line code changes, file locations, and production-ready structure.</td></tr>
+          <tr><td><code>superpowers execute plan</code></td><td>Dispatches sub-agents, code reviewers, and testers to automatically build out the implementation plan as live code.</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Tip: You are still in the driver's seat. Superpowers presents ideas, but you make the decisions. Review specs and plans before approving them.</p>
+    </div></div>
+
+    <h3>Step 3: Install Code Simplifier Plugin</h3>
+    <div class="phase"><div class="phase-num">3</div><div>
+      <p>While still in the plugins menu from Step 2, also add <strong>Code Simplifier</strong>. This plugin helps keep your codebase clean and readable.</p>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugins
+→ Find and add code simplifier. Restart Claude Code when done.</code></pre>
+    </div></div>
+
+    <h3>Step 4: Install Sequential Thinking MCP Server</h3>
+    <div class="phase"><div class="phase-num">4</div><div>
+      <p>Sequential Thinking adds chain-of-thought reasoning to Claude, allowing it to think deeper and longer before producing output. This directly improves the quality of brainstorming and planning in Superpowers.</p>
+      <h4>Install</h4>
+      <p>Inside Claude Code, type this as a regular prompt:</p>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>please install sequential thinking MCP server</code></pre>
+      <p>Claude will find and configure the MCP server automatically. Restart Claude Code once the install completes.</p>
+    </div></div>
+
+    <h3>Step 5: Install Context7 Plugin</h3>
+    <div class="phase"><div class="phase-num">5</div><div>
+      <p>Claude's training data can lag 6 to 12 months behind. Context7 gives it access to up-to-date documentation for every API, library, and service it might use, so it stops hallucinating outdated code.</p>
+      <h4>Install</h4>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugins
+→ Find and add context7. Install for user scope, then restart Claude Code.</code></pre>
+    </div></div>
+
+    <h3>Step 6: Install Warp Terminal</h3>
+    <div class="phase"><div class="phase-num">6</div><div>
+      <p>Warp is a free, AI-native terminal that makes it significantly easier to manage Claude Code sessions and review output in real time.</p>
+      <h4>Install</h4>
+      <p>Download from <strong>warp.dev</strong> and install. Open Warp, navigate to your project directory, and type <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">claude</code> to launch Claude Code inside it.</p>
+      <h4>Key Features</h4>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Feature</th><th>Shortcut</th><th>Description</th></tr>
+          <tr><td>Side panel</td><td>-</td><td>Browse your file tree and review plans, specs, and code as Claude writes them</td></tr>
+          <tr><td>Split panes</td><td><code>Cmd+D</code></td><td>Run multiple Claude Code instances side by side for parallel work</td></tr>
+          <tr><td>Tabs</td><td><code>Ctrl+T</code></td><td>Organize different workstreams in separate tabs</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Tip: The side panel is the real game-changer. You can talk to Claude in one pane and read the actual files it is writing in the other. This is how you catch issues early instead of discovering them later.</p>
+    </div></div>
+
+    <h3>Step 7: Build Custom Skills (Ongoing)</h3>
+    <div class="phase"><div class="phase-num">7</div><div>
+      <p>As you work, identify tasks you repeat often and turn them into Claude Code skills. A skill is a reusable workflow that Claude can execute on command, saving you from re-explaining the same process every time.</p>
+      <h4>How to Build a Skill</h4>
+      <ol>
+        <li>Use <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">superpowers brainstorm</code> to describe what the skill should do, including all specifications, file locations, and expected outputs.</li>
+        <li>Use <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">superpowers write plan</code> to turn it into an implementation plan.</li>
+        <li>Use <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">superpowers execute plan</code> to build the skill.</li>
+        <li>Test it, give feedback, and iterate. Expect 2-3 rounds before it runs cleanly.</li>
+      </ol>
+      <h4>Good Skill Candidates</h4>
+      <ul>
+        <li>Adding new entities to a project (characters, products, pages) with consistent structure</li>
+        <li>Setting up a new project from a standard template</li>
+        <li>Running a multi-step review or QA process</li>
+        <li>Generating formatted deliverables from raw data</li>
+      </ul>
+    </div></div>
+
+    <h3>Quick Reference Card</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Action</th><th>Command</th></tr>
+        <tr><td>Configure status line</td><td><code>npx ccstatusline@latest</code></td></tr>
+        <tr><td>Open plugins menu</td><td><code>/plugins</code></td></tr>
+        <tr><td>Start a new feature</td><td><code>superpowers brainstorm</code></td></tr>
+        <tr><td>Create implementation plan</td><td><code>superpowers write plan</code></td></tr>
+        <tr><td>Build from plan</td><td><code>superpowers execute plan</code></td></tr>
+        <tr><td>Check context usage</td><td>Look at status bar (stay under 50%)</td></tr>
+        <tr><td>Start fresh session</td><td>Exit and relaunch <code>claude</code></td></tr>
+        <tr><td>Split panes in Warp</td><td><code>Cmd+D</code></td></tr>
+        <tr><td>New tab in Warp</td><td><code>Ctrl+T</code></td></tr>
+      </table>
+    </div>
+  </section>
+
   <!-- LINKS & RESOURCES -->
   <section id="links">
     <div class="section-header">
-      <span class="section-num">13</span>
+      <span class="section-num">14</span>
       <h2>Links &amp; Resources</h2>
     </div>
     <h3>RoboNuggets (Jay E)</h3>
@@ -2348,7 +2545,7 @@ fi</pre>
     <div class="links-grid">
       <div class="link-card"><div><div class="lc-name">OpenClaw</div><div class="lc-desc">Open-source AI agent for messaging platforms</div></div><div class="lc-tag">Core</div></div>
       <div class="link-card"><div><div class="lc-name">Antigravity</div><div class="lc-desc">Google's agentic platform with Workspace integration</div></div><div class="lc-tag">Platform</div></div>
-      <div class="link-card"><div><div class="lc-name">Claude Code</div><div class="lc-desc">Zev's primary CLI agent. 13 skills, 4 MCP integrations, LaunchAgent automation. See Section 10.</div></div><div class="lc-tag">Primary</div></div>
+      <div class="link-card"><div><div class="lc-name">Claude Code</div><div class="lc-desc">Zev's primary CLI agent. 15 skills, 5 MCP integrations, two-machine automation. See Sections 10 + 13.</div></div><div class="lc-tag">Primary</div></div>
       <div class="link-card"><div><div class="lc-name">Codex (OpenAI)</div><div class="lc-desc">OpenAI's agentic coding platform for GPT-5.x models</div></div><div class="lc-tag">Tools</div></div>
       <div class="link-card"><div><div class="lc-name">Airtable</div><div class="lc-desc">Database for managing creative assets and campaigns</div></div><div class="lc-tag">Data</div></div>
       <div class="link-card"><div><div class="lc-name">Blotato</div><div class="lc-desc">AI content engine for multi-platform scheduling</div></div><div class="lc-tag">Content</div></div>
@@ -2388,7 +2585,7 @@ fi</pre>
 
 <footer>
   <p><strong>AI Agent Masterclass</strong></p>
-  <p>Last updated March 8, 2026. v2.3. Expanded skills reference, session startup checklist, people links.</p>
+  <p>Last updated March 22, 2026. v2.4. Added Claude Code Power Setup guide (Section 13).</p>
 </footer>
 
 <script>
