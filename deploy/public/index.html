@@ -848,8 +848,8 @@
   <div class="hero-meta">
     <span><strong>14</strong> Sections</span>
     <span><strong>23</strong> Action Items</span>
-    <span><strong>15</strong> Skills</span>
-    <span>March 22, 2026</span>
+    <span><strong>25</strong> Skills</span>
+    <span>April 10, 2026</span>
   </div>
   <div class="progress-wrap" id="progress-link" style="cursor:pointer;" title="View all action items">
     <div class="progress-label"><strong id="progress-done">0</strong> / <span id="progress-total">23</span> items complete</div>
@@ -874,7 +874,8 @@
     <li><a href="#" data-section="openclaw" class="nav-link"><span class="sidebar-num">11</span>OpenClaw Setup</a></li>
     <li><a href="#" data-section="providers" class="nav-link"><span class="sidebar-num">12</span>Model Providers</a></li>
     <li><a href="#" data-section="powersetup" class="nav-link"><span class="sidebar-num">13</span>Power Setup Guide</a></li>
-    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">14</span>Links &amp; Resources</a></li>
+    <li><a href="#" data-section="knowledge" class="nav-link"><span class="sidebar-num">14</span>Knowledge &amp; Security</a></li>
+    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">15</span>Links &amp; Resources</a></li>
   </ul>
 </nav>
 
@@ -2567,10 +2568,120 @@ fi</pre>
     </div>
   </section>
 
+  <!-- KNOWLEDGE BASE & SECURITY -->
+  <section id="knowledge">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <h2>Knowledge &amp; Security</h2>
+    </div>
+    <p style="margin-bottom:24px;">Two protocols that compound over time: an LLM-maintained knowledge base (inspired by Andrej Karpathy) and a secrets management system that eliminates plaintext credentials from your machine. Both were implemented April 2026 and are now part of every session.</p>
+    <p style="margin-bottom:24px;font-size:11px;color:var(--text-dim);"><strong>Source:</strong> Andrej Karpathy's viral tweet on LLM Knowledge Bases (18M+ views, April 2026) + Electra Filmworks security audit</p>
+
+    <h3>The Karpathy Knowledge Base Pattern</h3>
+    <p style="margin-bottom:16px;">Andrej Karpathy (former head of Tesla AI, co-built GPT at OpenAI) shared how he uses LLMs to build personal knowledge bases for research topics. The core insight: instead of asking an LLM questions and letting the answers evaporate, you compile them into a structured wiki that the LLM maintains. Knowledge compounds across sessions instead of resetting every time.</p>
+
+    <div class="phase"><div class="phase-num">1</div><div>
+      <h4>The Compilation Loop</h4>
+      <p>This is the pattern that makes it work:</p>
+      <ol>
+        <li><strong>Raw ingestion</strong> - Source material (articles, repos, research, client data) goes into project folders</li>
+        <li><strong>LLM compilation</strong> - The LLM structures raw data into linked markdown articles in a Knowledge directory. The human rarely edits directly.</li>
+        <li><strong>Cumulative Q&amp;A</strong> - When a complex question is researched, the answer gets filed back into the knowledge base. Every query adds to the system.</li>
+        <li><strong>Linting</strong> - Periodic LLM passes find gaps, stale info, inconsistencies, and connections between articles</li>
+        <li><strong>The wiki is the LLM's domain</strong> - You read and benefit. The LLM writes and maintains. You are the reader, not the editor.</li>
+      </ol>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">2</div><div>
+      <h4>Our Implementation</h4>
+      <p>We adapted Karpathy's approach for Claude Code (no Obsidian or Marp required):</p>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Component</th><th>Location</th><th>Purpose</th></tr>
+          <tr><td>Knowledge Base</td><td><code>Desktop/Claude/Knowledge/</code></td><td>LLM-maintained wiki with categorized articles</td></tr>
+          <tr><td>INDEX.md</td><td><code>Knowledge/INDEX.md</code></td><td>Master index with brief summaries of every article</td></tr>
+          <tr><td>Machine Manifest</td><td><code>Knowledge/operations/machine-manifest.md</code></td><td>Full system inventory - the rebuild blueprint</td></tr>
+          <tr><td>Security Posture</td><td><code>Knowledge/operations/security-posture.md</code></td><td>Current security state and protocols</td></tr>
+          <tr><td>Secrets Management</td><td><code>Knowledge/operations/secrets-management.md</code></td><td>Every secret, where it lives, how to rotate</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:12px;">Categories: <strong>operations</strong>, <strong>film-production</strong>, <strong>business</strong>, <strong>tech</strong>, <strong>real-estate</strong>. New categories added as needed.</p>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">The value isn't the tool (Obsidian, Marp, VS Code) - it's the compilation loop. Raw data goes in, structured knowledge comes out, queries add to the knowledge, and the whole thing compounds.</p>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">3</div><div>
+      <h4>Session Protocol (Updated)</h4>
+      <p>Every session now follows this protocol:</p>
+      <ul>
+        <li><strong>Start:</strong> Read MASTER_HUB.md, user_zw.md, and skim Knowledge/INDEX.md for relevant context</li>
+        <li><strong>During:</strong> Create/update project notes. File research findings into Knowledge as you go.</li>
+        <li><strong>End:</strong> Update hub files, compile new knowledge into the Knowledge base, update INDEX.md</li>
+      </ul>
+    </div></div>
+
+    <h3>Secrets Management Protocol</h3>
+    <p style="margin-bottom:16px;">A full security audit (April 10, 2026) found plaintext API keys, passwords, and tokens scattered across <code>~/.zshrc</code> and 8 project <code>.env</code> files. Any npm package, VS Code extension, or MCP server could read them. Everything was migrated to encrypted storage.</p>
+
+    <div class="phase"><div class="phase-num">4</div><div>
+      <h4>The Three-Layer Approach</h4>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Layer</th><th>What goes here</th><th>How it works</th></tr>
+          <tr><td><strong>macOS Keychain</strong></td><td>Global secrets (API keys, passwords, tokens)</td><td>Hardware-encrypted by Apple Silicon Secure Enclave. Loaded into env vars at shell startup via <code>security find-generic-password</code></td></tr>
+          <tr><td><strong>Vercel Env Vars</strong></td><td>Deployed project secrets</td><td>Encrypted at rest on Vercel. Pull locally with <code>vercel env pull</code> only when needed for dev</td></tr>
+          <tr><td><strong>generate-env.sh</strong></td><td>Local-only project secrets</td><td>Script pulls from Keychain and generates a temporary .env file. No plaintext stored on disk.</td></tr>
+        </table>
+      </div>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">5</div><div>
+      <h4>Adding New Secrets (Checklist)</h4>
+      <ol>
+        <li>Store in macOS Keychain: <code>security add-generic-password -a "zeevwaismann" -s "service-name" -w "value" -U</code></li>
+        <li>If global: add <code>export VAR=$(security find-generic-password -s "service-name" -a "zeevwaismann" -w)</code> to <code>~/.zshrc</code></li>
+        <li>If project-specific and deployed: push to Vercel with <code>vercel env add</code></li>
+        <li>If project-specific and local: add to that project's <code>generate-env.sh</code></li>
+        <li>Never commit .env files (global gitignore at <code>~/.gitignore_global</code> catches this)</li>
+        <li>Update <code>Knowledge/operations/secrets-management.md</code> with the new entry</li>
+      </ol>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">6</div><div>
+      <h4>What was migrated</h4>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Secret</th><th>From</th><th>To</th></tr>
+          <tr><td>Gmail App Password</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>Airbnb Credentials</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>GitHub PAT</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>Airtable API Key</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>Supabase, Patreon, Resend, Google Maps keys</td><td>Project .env files</td><td>Vercel</td></tr>
+          <tr><td>Mapbox, Supabase keys</td><td>Project .env files</td><td>Vercel</td></tr>
+          <tr><td>Google Service Account Key</td><td>SiteForge .env (base64 private key)</td><td>Vercel</td></tr>
+          <tr><td>TRUEFILE encryption + session + SMTP</td><td>Project .env file</td><td>Keychain + generate-env.sh</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">FileVault disk encryption confirmed ON. Global gitignore blocks .env* from all repos. 8 plaintext .env files deleted after secrets were confirmed in their new locations.</p>
+    </div></div>
+
+    <h3>Quick Reference Card</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Action</th><th>Command</th></tr>
+        <tr><td>Read a Keychain secret</td><td><code>security find-generic-password -s "name" -a "zeevwaismann" -w</code></td></tr>
+        <tr><td>Store a new secret</td><td><code>security add-generic-password -a "zeevwaismann" -s "name" -w "value" -U</code></td></tr>
+        <tr><td>Pull Vercel env vars locally</td><td><code>vercel env pull .env.local</code></td></tr>
+        <tr><td>Push a secret to Vercel</td><td><code>printf 'value' | vercel env add VAR_NAME production</code></td></tr>
+        <tr><td>Generate TRUEFILE .env</td><td><code>cd TRUEFILE && ./generate-env.sh</code></td></tr>
+        <tr><td>Check FileVault status</td><td><code>fdesetup status</code></td></tr>
+      </table>
+    </div>
+  </section>
+
   <!-- LINKS & RESOURCES -->
   <section id="links">
     <div class="section-header">
-      <span class="section-num">14</span>
+      <span class="section-num">15</span>
       <h2>Links &amp; Resources</h2>
     </div>
     <h3>RoboNuggets (Jay E)</h3>
@@ -2587,7 +2698,7 @@ fi</pre>
     <div class="links-grid">
       <div class="link-card"><div><div class="lc-name">OpenClaw</div><div class="lc-desc">Open-source AI agent for messaging platforms</div></div><div class="lc-tag">Core</div></div>
       <div class="link-card"><div><div class="lc-name">Antigravity</div><div class="lc-desc">Google's agentic platform with Workspace integration</div></div><div class="lc-tag">Platform</div></div>
-      <div class="link-card"><div><div class="lc-name">Claude Code</div><div class="lc-desc">Zev's primary CLI agent. 21 skills, 6 MCP integrations, two-machine automation. See Sections 10 + 13.</div></div><div class="lc-tag">Primary</div></div>
+      <div class="link-card"><div><div class="lc-name">Claude Code</div><div class="lc-desc">Zev's primary CLI agent. 25 skills, 7 MCP integrations, two-machine automation, LLM Knowledge Base. See Sections 10, 13, 14.</div></div><div class="lc-tag">Primary</div></div>
       <div class="link-card"><div><div class="lc-name">Codex (OpenAI)</div><div class="lc-desc">OpenAI's agentic coding platform for GPT-5.x models</div></div><div class="lc-tag">Tools</div></div>
       <div class="link-card"><div><div class="lc-name">Airtable</div><div class="lc-desc">Database for managing creative assets and campaigns</div></div><div class="lc-tag">Data</div></div>
       <div class="link-card"><div><div class="lc-name">Blotato</div><div class="lc-desc">AI content engine for multi-platform scheduling</div></div><div class="lc-tag">Content</div></div>
@@ -2616,6 +2727,7 @@ fi</pre>
     </div>
     <h3>People to Follow</h3>
     <div class="links-grid">
+      <div class="link-card"><a href="https://x.com/karpathy" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Andrej Karpathy</div><div class="lc-desc">Former Tesla AI lead, co-built GPT at OpenAI. LLM Knowledge Base methodology. <span style="color:var(--accent);">@karpathy</span></div></div><div class="lc-tag">Research</div></a></div>
       <div class="link-card"><a href="https://www.youtube.com/@RoboNuggets" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Jay E (RoboNuggets)</div><div class="lc-desc">CRT framework, OpenClaw, AI automation. <span style="color:var(--accent);">@robonuggets</span></div></div><div class="lc-tag">Creator</div></a></div>
       <div class="link-card"><a href="https://www.youtube.com/@matthew_berman" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Matthew Berman</div><div class="lc-desc">Security-first agent design. CEO, Forward Future. <span style="color:var(--accent);">@MatthewBerman</span></div></div><div class="lc-tag">Expert</div></a></div>
       <div class="link-card"><a href="https://steipete.me" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Peter Steinberger</div><div class="lc-desc">OpenClaw creator, now at OpenAI. Built PSPDFKit. <span style="color:var(--accent);">@steipete</span></div></div><div class="lc-tag">Creator</div></a></div>
@@ -2628,7 +2740,7 @@ fi</pre>
 
 <footer>
   <p><strong>AI Agent Masterclass</strong></p>
-  <p>Last updated April 6, 2026. v3.0. Full accuracy audit: corrected model names (Veo 3.1, Seedance 2.0, Kie AI, FLUX 2 Pro, Qwen 3.5), removed Sora 2 Pro (discontinued), fixed Google AI Studio credit claim, updated CRT framework with live implementation details, added subagent-driven execution and fresh-eyes QA patterns, corrected /compact advice, updated skill count to 21, added GWS CLI integration.</p>
+  <p>Last updated April 10, 2026. v4.0. Added Section 14: Knowledge Base &amp; Security - Karpathy-inspired LLM knowledge compilation, secrets management protocol (all plaintext migrated to Keychain + Vercel), machine manifest. Updated skill count to 25, MCP integrations to 7. Previous: v3.0 accuracy audit (model names, CRT framework, subagent patterns, GWS CLI).</p>
 </footer>
 
 <script>

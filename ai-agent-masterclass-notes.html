@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Agent Masterclass — Zev</title>
 <meta property="og:title" content="AI Agent Masterclass">
-<meta property="og:description" content="14 sections covering Claude Code CLI, power setup, skills, automation, storyboards, marketing pipelines, and the full AI agent toolkit.">
+<meta property="og:description" content="14 sections covering Claude Code CLI, power setup, skills, automation, storyboards, marketing pipelines, and the full AI agent toolkit. Updated April 2026.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ai-agent-masterclass.vercel.app">
 <meta name="description" content="Zev's AI Agent Masterclass - notes, workflows, action items, and frameworks for building an AI agent environment.">
@@ -848,8 +848,8 @@
   <div class="hero-meta">
     <span><strong>14</strong> Sections</span>
     <span><strong>23</strong> Action Items</span>
-    <span><strong>15</strong> Skills</span>
-    <span>March 22, 2026</span>
+    <span><strong>25</strong> Skills</span>
+    <span>April 10, 2026</span>
   </div>
   <div class="progress-wrap" id="progress-link" style="cursor:pointer;" title="View all action items">
     <div class="progress-label"><strong id="progress-done">0</strong> / <span id="progress-total">23</span> items complete</div>
@@ -874,7 +874,8 @@
     <li><a href="#" data-section="openclaw" class="nav-link"><span class="sidebar-num">11</span>OpenClaw Setup</a></li>
     <li><a href="#" data-section="providers" class="nav-link"><span class="sidebar-num">12</span>Model Providers</a></li>
     <li><a href="#" data-section="powersetup" class="nav-link"><span class="sidebar-num">13</span>Power Setup Guide</a></li>
-    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">14</span>Links &amp; Resources</a></li>
+    <li><a href="#" data-section="knowledge" class="nav-link"><span class="sidebar-num">14</span>Knowledge &amp; Security</a></li>
+    <li><a href="#" data-section="links" class="nav-link"><span class="sidebar-num">15</span>Links &amp; Resources</a></li>
   </ul>
 </nav>
 
@@ -949,9 +950,9 @@
       <p><strong>2. Self-Learning System</strong> — Agent trains on your prompt best practices (387+ lines of documentation). Learns from your feedback and external workflows (n8n, etc.). Absorbs new techniques you feed it. Never goes obsolete because integrating new models is just copying API docs.</p>
       <p><strong>3. Multi-Agent Parallel Processing</strong> — Spawn multiple agents working simultaneously on different products, styles, or models. Three agents generating content in parallel while you step away.</p>
       <p><strong>4. No Node Spaghetti</strong> — Unlike Weev or n8n workflows that become complex and break with model updates, you just describe what you want. Agent handles polling, waiting, retries, and even automatic failover between providers.</p>
-      <p><strong>5. Cost Efficiency</strong> — Use API aggregators (Key AI, Fal AI, Wavespeed) instead of paying for wrapper platforms like Highsfield. Google AI Studio gives $300 free credit per Gmail account for Nano Banana Pro and VO 3.1.</p>
+      <p><strong>5. Cost Efficiency</strong> — Use API aggregators (Kie AI, Fal AI, Wavespeed) instead of paying for wrapper platforms like Highsfield. Google AI Studio offers a generous free tier with rate limits (no credit card required). Paid tiers via Gemini API for higher throughput.</p>
       <h3>Workflow Breakdown</h3>
-      <p>1. Provide product photo or brand reference → 2. Agent analyzes image + brand guidelines + prompt best practices → 3. Creates Airtable records with unique prompts and cost estimates → 4. Generates images via chosen models (2 variations each) → 5. You review in Airtable → 6. Select winners, direct agent to animate with video models (Sora 2 Pro, VO 3.1, Kling 3.0) → 7. Agent crafts video prompts with dialogue, camera specs → 8. Videos generate in parallel → 9. All assets logged in Airtable.</p>
+      <p>1. Provide product photo or brand reference → 2. Agent analyzes image + brand guidelines + prompt best practices → 3. Creates Airtable records with unique prompts and cost estimates → 4. Generates images via chosen models (2 variations each) → 5. You review in Airtable → 6. Select winners, direct agent to animate with video models (Veo 3.1, Kling 3.0, Seedance 2.0) → 7. Agent crafts video prompts with dialogue, camera specs → 8. Videos generate in parallel → 9. All assets logged in Airtable.</p>
     </div>
   </section>
 
@@ -983,6 +984,21 @@
       </div>
     </div>
     <p class="dim">The Provider System inside CLAUDE.md lets you override which API aggregator handles generation by passing <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;">provider="kie"</code>, <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;">provider="google"</code>, or <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:13px;">provider="wavespeed"</code> to generation functions.</p>
+
+    <h3>CRT in Practice: Zev's Live Implementation</h3>
+    <p style="margin-bottom:12px;">The actual CRT files live in <code>crt/</code> at the workspace root. Here is what each contains:</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>File</th><th>Contents</th></tr>
+        <tr><td><code>C-agent.md</code></td><td>Creative director identity, full Provider Registry with 5 models (Nano Banana 2, Nano Banana Pro, FLUX.2 Pro/Max/Flex), API model strings, prompt format rules per model, cost tracking, default routing table</td></tr>
+        <tr><td><code>R-references.md</code></td><td>Prompt engineering best practices per model (natural language for Nano Banana, JSON structured for FLUX), art style guides (Chibi, Pixel Art), sprite sheet specs, color palettes, character consistency checklists, file naming conventions</td></tr>
+        <tr><td><code>T-tools.md</code></td><td>Python routing code with PROVIDERS dict and ROUTING table, Airtable CRUD helpers, prompt generators (natural language + JSON), cost tracking per provider, environment variable setup</td></tr>
+      </table>
+    </div>
+    <h4>Key Insight: Natural Language vs JSON Prompts</h4>
+    <p><strong>Nano Banana 2/Pro:</strong> Natural language prompts only. Descriptive sentences, plain English colors, character descriptions every time. No hex codes.</p>
+    <p><strong>FLUX 2 Pro/Max/Flex:</strong> JSON structured prompts preferred. Hex color codes supported and recommended for precision. Subject-first hierarchy.</p>
+    <p style="margin-top:8px;"><strong>Project extensions:</strong> Each project gets a <code>PROJECT-*.md</code> file with project-specific anchor strings, character details, and color palettes. Global CRT files never change per project - only the PROJECT file swaps.</p>
   </section>
 
   <!-- ACTION ITEMS (UPDATED) -->
@@ -1012,7 +1028,7 @@
       </li>
       <li data-status="done">
         <strong>Implement Model Fallback Chain <span class="status-badge status-done">Done</span></strong>
-        <p>Primary: Gemini 3.1 Flash Lite. Fallbacks: Claude Sonnet 4.6, Claude Haiku 4.5. Auto-retry on rate limits. Cost tracking active.</p>
+        <p>Primary: Gemini 3.1 Flash Lite. Fallbacks: Claude Sonnet 4.6, Claude Haiku 4.5. Auto-retry on rate limits with provider rotation. Cost tracking via token budget cron.</p>
         <span class="tag tag-action">Actionable</span>
       </li>
       <li data-status="done">
@@ -1042,7 +1058,7 @@
       </li>
       <li data-status="done">
         <strong>Build Humanizer Skill <span class="status-badge status-done">Done</span></strong>
-        <p>No-em-dash rule enforced globally via CLAUDE.md and baked into all 13 custom skills (docx, pdf, pptx, xlsx, etc.). Every document, email, and generated content follows humanizer rules by default.</p>
+        <p>No-em-dash rule enforced globally via CLAUDE.md and baked into all custom skills (docx, pdf, pptx, xlsx, etc.). Every document, email, and generated content follows humanizer rules by default.</p>
         <span class="tag tag-action">Actionable</span>
       </li>
       <li data-status="todo">
@@ -1087,7 +1103,7 @@
       </li>
       <li data-status="todo">
         <strong>Add OpenAI as Fallback Provider <span class="status-badge status-todo">To Do</span></strong>
-        <p>GPT-5.4 is now available. Consider adding OpenAI models to the fallback chain for provider diversity. Evaluate pricing vs. current Anthropic/Google stack.</p>
+        <p>GPT-5.4 and GPT-5.4 Mini are available. Consider adding OpenAI models for provider diversity. Note: OpenAI has aggressive deprecation cycles (Sora shut down April 2026, DALL-E 3 deprecated May 2026). Evaluate stability vs. current Anthropic/Google stack.</p>
         <span class="tag tag-research">Research</span>
       </li>
       <li data-status="done">
@@ -1136,12 +1152,12 @@
         <tr><td>Asset Type</td><td>Single Select</td><td>Image Ad / UGC / Studio Shot / Storyboard Frame / Product Shot</td></tr>
         <tr><td>Reference Image</td><td>Attachment</td><td>Source photo or brand reference</td></tr>
         <tr><td>Image Prompt</td><td>Long Text</td><td>AI or hand-written prompt</td></tr>
-        <tr><td>Model Used (Image)</td><td>Single Select</td><td>Nano Banana Pro / GPT Image 1.5 / Flux / DALL-E</td></tr>
+        <tr><td>Model Used (Image)</td><td>Single Select</td><td>Nano Banana 2 / Nano Banana Pro / GPT Image 1.5 / FLUX 2 Pro</td></tr>
         <tr><td>Generated Image 1</td><td>Attachment</td><td>First variation</td></tr>
         <tr><td>Generated Image 2</td><td>Attachment</td><td>Second variation</td></tr>
         <tr><td>Image Status</td><td>Single Select</td><td>Queued / Generating / Generated / Approved / Rejected</td></tr>
         <tr><td>Video Prompt</td><td>Long Text</td><td>Dialogue, action, camera specs</td></tr>
-        <tr><td>Video Model</td><td>Single Select</td><td>Sora 2 Pro / VO 3.1 / Kling 3.0 / Seance</td></tr>
+        <tr><td>Video Model</td><td>Single Select</td><td>Veo 3.1 / Kling 3.0 / Seedance 2.0</td></tr>
         <tr><td>Generated Video 1</td><td>Attachment</td><td>First video variation</td></tr>
         <tr><td>Generated Video 2</td><td>Attachment</td><td>Second video variation</td></tr>
         <tr><td>Video Status</td><td>Single Select</td><td>Queued / Generating / Generated / Approved / Rejected</td></tr>
@@ -1182,14 +1198,14 @@
         <tr><td>Frame - [Style B]</td><td>Attachment</td><td>Generated image (16:9)</td></tr>
       </table>
     </div>
-    <p class="dim"><strong>Prompt rules:</strong> No hex codes (renders as color swatches). No JSON prompts. Plain English colors only. Include character descriptions every time. Include negative instructions: "No text, no labels, no color swatches, no overlays." See /airtable-storyboard skill for full pipeline.</p>
+    <p class="dim"><strong>Prompt rules (model-specific):</strong> For <strong>Nano Banana Pro/2</strong>: use plain English colors ("warm copper" not "#B87333"), natural language prompts, include character descriptions every time, include negative instructions ("No text, no labels, no overlays"). For <strong>FLUX 2 Pro</strong>: hex codes ARE supported and recommended for color precision, JSON structured prompts preferred. See /airtable-storyboard skill and the CRT framework (crt/R-references.md) for full pipeline.</p>
     <h3>Table 4: AI Model Registry</h3>
     <div class="table-wrap">
       <table>
         <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
         <tr><td>Model Name</td><td>Single Line</td><td>e.g., Kling 3.0</td></tr>
         <tr><td>Type</td><td>Single Select</td><td>Image / Video / Audio</td></tr>
-        <tr><td>Provider</td><td>Single Select</td><td>Google / OpenAI / Kling / Fal AI / Key AI / Wavespeed</td></tr>
+        <tr><td>Provider</td><td>Single Select</td><td>Google / OpenAI / Kling / Fal AI / Kie AI / Wavespeed</td></tr>
         <tr><td>API Endpoint</td><td>URL</td><td>For agent routing</td></tr>
         <tr><td>Cost Per Gen</td><td>Currency</td><td>Budget tracking</td></tr>
         <tr><td>Quality Rating</td><td>Rating</td><td>Your subjective score</td></tr>
@@ -1209,26 +1225,28 @@
       <h2>API Aggregators &amp; Fallback Chain</h2>
     </div>
     <div class="chain">
-      <div class="chain-node"><strong>Google AI Studio</strong><span>Free $300 credit/Gmail</span></div>
+      <div class="chain-node"><strong>Google AI Studio</strong><span>Free tier, generous limits</span></div>
       <span class="chain-arrow">→</span>
-      <div class="chain-node"><strong>Key AI</strong><span>Cheapest prices</span></div>
+      <div class="chain-node"><strong>Kie AI</strong><span>Cheapest prices</span></div>
       <span class="chain-arrow">→</span>
       <div class="chain-node"><strong>Fal AI</strong><span>400+ models, reliable</span></div>
       <span class="chain-arrow">→</span>
       <div class="chain-node"><strong>Wavespeed AI</strong><span>Backup, competitive pricing</span></div>
     </div>
     <h3>Setup Plan</h3>
-    <p>1. Create accounts on Key AI, Fal AI, and Wavespeed AI. 2. Get API keys from each. 3. Store in .env file or Antigravity environment variables. 4. Feed API documentation to Claude Code / Antigravity so it can integrate each provider. 5. Register models in Airtable's AI Model Registry. 6. Configure fallback chain in your CLAUDE.md provider system.</p>
+    <p>1. Create accounts on Kie AI, Fal AI, and Wavespeed AI. 2. Get API keys from each. 3. Store in .env file or Antigravity environment variables. 4. Feed API documentation to Claude Code / Antigravity so it can integrate each provider. 5. Register models in Airtable's AI Model Registry. 6. Configure fallback chain in your CLAUDE.md provider system.</p>
     <h3>Top Models to Connect</h3>
     <div class="table-wrap">
       <table>
         <tr><th>Model</th><th>Type</th><th>Best For</th><th>Recommended Provider</th></tr>
-        <tr><td>Nano Banana Pro</td><td>Image</td><td>Realistic images, product shots</td><td>Google AI Studio (free)</td></tr>
-        <tr><td>Flux Pro</td><td>Image</td><td>Photorealism, complex scenes</td><td>Key AI</td></tr>
-        <tr><td>DALL-E 3</td><td>Image</td><td>Varied styles, artistic</td><td>Fal AI</td></tr>
-        <tr><td>Kling 3.0</td><td>Video</td><td>Cinematic 60fps motion</td><td>Fal AI</td></tr>
-        <tr><td>Sora 2 Pro</td><td>Video</td><td>Ultra-high quality, long form</td><td>Fal AI</td></tr>
-        <tr><td>VO 3.1</td><td>Video</td><td>Realistic talking heads</td><td>Google AI Studio (free)</td></tr>
+        <tr><td>Nano Banana 2</td><td>Image</td><td>Fast iteration, sprites, game assets, text rendering</td><td>Google AI Studio (free tier)</td></tr>
+        <tr><td>Nano Banana Pro</td><td>Image</td><td>Hero images, complex compositions, max quality</td><td>Google AI Studio (paid)</td></tr>
+        <tr><td>FLUX 2 Pro</td><td>Image</td><td>Pixel art, stylized illustration, JSON prompts</td><td>Fal AI / Kie AI</td></tr>
+        <tr><td>GPT Image 1.5</td><td>Image</td><td>Integrated with GPT-5.x, varied styles</td><td>OpenAI API</td></tr>
+        <tr><td>Midjourney V8</td><td>Image</td><td>Gold standard photorealism, product shots</td><td>Midjourney / Kie AI</td></tr>
+        <tr><td>Kling 3.0</td><td>Video</td><td>Cinematic 4K 60fps, multi-shot storyboarding</td><td>Fal AI</td></tr>
+        <tr><td>Veo 3.1</td><td>Video</td><td>Realistic video, native audio, 8s clips</td><td>Google AI Studio</td></tr>
+        <tr><td>Seedance 2.0</td><td>Video</td><td>Audio-video joint generation (ByteDance)</td><td>Fal AI</td></tr>
       </table>
     </div>
   </section>
@@ -1247,7 +1265,7 @@
       <li>Repurposes content across platforms (Instagram, TikTok, LinkedIn, YouTube)</li>
       <li>Drafts social copy with hashtags and branding</li>
       <li>Schedules posts in advance</li>
-      <li>Tracks analytics per platform</li>
+      <li>Analytics dashboard (on roadmap, not yet available)</li>
     </ul>
     <h3>Integration with Your Workflow</h3>
     <p><strong>Step 1:</strong> Connect your social media accounts (Instagram, TikTok, YouTube, LinkedIn)</p>
@@ -1261,7 +1279,7 @@
       <li><strong>Caption Variants:</strong> Generate multiple caption versions for A/B testing</li>
       <li><strong>Hashtag Auto-Generation:</strong> Suggests trending hashtags per platform</li>
       <li><strong>Bulk Scheduling:</strong> Schedule 30 days of content from a single prompt</li>
-      <li><strong>Analytics Dashboard:</strong> Track performance per platform and content type</li>
+      <li><strong>Analytics Dashboard:</strong> Coming soon (on Blotato's roadmap)</li>
     </ul>
   </section>
 
@@ -1275,7 +1293,7 @@
     <h3>Pipeline Stages</h3>
     <div class="phase"><div class="phase-num">1</div><div><div class="phase-label">Ingest</div><h4>Gather Source Material</h4><p>Video files, podcast links, blog articles, product photos, brand references</p><ul><li>YouTube channel RSS feed</li><li>Product photography (from shoot or Midjourney)</li><li>Brand guidelines and voice (brand.md)</li><li>Style reference images (style.png)</li></ul></div></div>
     <div class="phase"><div class="phase-num">2</div><div><div class="phase-label">Process</div><h4>Extract &amp; Analyze</h4><p>Break down source material into usable components</p><ul><li>Extract transcript (Blotato)</li><li>Identify key talking points</li><li>Pull quotes for pull-quotes</li><li>Analyze tone and audience fit</li></ul></div></div>
-    <div class="phase"><div class="phase-num">3</div><div><div class="phase-label">Create</div><h4>Generate Assets</h4><p>Use AI to create platform-specific content</p><ul><li>Instagram: Carousel posts + captions (Nano Banana Pro for images)</li><li>LinkedIn: Long-form thought leadership (Claude)</li><li>TikTok: Auto-cut 15-30 sec videos + trending audio (Kling 3.0)</li><li>YouTube: Chapters, thumbnails, description</li><li>Blog: Full article with SEO optimization (Claude)</li></ul></div></div>
+    <div class="phase"><div class="phase-num">3</div><div><div class="phase-label">Create</div><h4>Generate Assets</h4><p>Use AI to create platform-specific content</p><ul><li>Instagram: Carousel posts + captions (Nano Banana 2/Pro for images)</li><li>LinkedIn: Long-form thought leadership (Claude)</li><li>TikTok: Auto-cut 15-30 sec videos + trending audio (Kling 3.0 / Seedance 2.0)</li><li>YouTube: Chapters, thumbnails, description</li><li>Blog: Full article with SEO optimization (Claude)</li></ul></div></div>
     <div class="phase"><div class="phase-num">4</div><div><div class="phase-label">Review</div><h4>Creative Director Approval</h4><p>You review all generated assets in Airtable before publishing</p><ul><li>Brand fit check</li><li>Tone/voice alignment</li><li>Factual accuracy</li><li>Approve or request revisions</li></ul></div></div>
     <div class="phase"><div class="phase-num">5</div><div><div class="phase-label">Publish</div><h4>Schedule &amp; Go Live</h4><p>Blotato handles multi-platform scheduling and timing</p><ul><li>Stagger posting times per platform for maximum reach</li><li>Track metrics in real-time</li><li>Auto-respond to comments (optional)</li></ul></div></div>
     <h3>Tech Stack</h3>
@@ -1286,8 +1304,8 @@
         <tr><td>Source Monitoring</td><td>RSS feeds, YouTube API</td><td>Detects new content</td></tr>
         <tr><td>Transcription</td><td>Blotato</td><td>Converts video to text</td></tr>
         <tr><td>Copy Generation</td><td>Claude Opus</td><td>Writes captions, posts, articles</td></tr>
-        <tr><td>Image Generation</td><td>Nano Banana Pro, Flux</td><td>Creates visuals</td></tr>
-        <tr><td>Video Generation</td><td>Kling 3.0, Sora 2</td><td>Creates video content</td></tr>
+        <tr><td>Image Generation</td><td>Nano Banana 2/Pro, FLUX 2 Pro, Midjourney V8</td><td>Creates visuals</td></tr>
+        <tr><td>Video Generation</td><td>Kling 3.0, Veo 3.1, Seedance 2.0</td><td>Creates video content</td></tr>
         <tr><td>Content Repository</td><td>Airtable</td><td>Stores all assets and metadata</td></tr>
         <tr><td>Publishing</td><td>Blotato</td><td>Schedules across platforms</td></tr>
       </table>
@@ -1303,11 +1321,11 @@
     <p style="margin-bottom:24px;">Phased approach to building out the full AI agent and marketing automation system.</p>
     <h3>Phase 1: Foundation (Week 1-2)</h3>
     <div class="phase"><div class="phase-num">1</div><div><h4>Set up CRT Framework Workspace</h4><ul><li>Create CLAUDE.md with agent brain and system prompts</li><li>Build References folder (brand.md, style.png, prompt library)</li><li>Create Tools folder with Python skeleton scripts</li><li>Download RoboNuggets templates (R56, R57)</li></ul></div></div>
-    <div class="phase"><div class="phase-num">2</div><div><h4>Connect API Aggregators</h4><ul><li>Create accounts: Key AI, Fal AI, Wavespeed</li><li>Get API keys and test each with simple prompts</li><li>Set up .env file with all credentials</li><li>Implement fallback chain logic in CLAUDE.md</li></ul></div></div>
+    <div class="phase"><div class="phase-num">2</div><div><h4>Connect API Aggregators</h4><ul><li>Create accounts: Kie AI, Fal AI, Wavespeed</li><li>Get API keys and test each with simple prompts</li><li>Set up .env file with all credentials</li><li>Implement fallback chain logic in CLAUDE.md</li></ul></div></div>
     <div class="phase"><div class="phase-num">3</div><div><h4>Build Airtable Base</h4><ul><li>Create Creative Assets table</li><li>Create Campaigns table</li><li>Create Storyboard Sequences table</li><li>Create AI Model Registry table</li><li>Connect MCP to Claude Code</li></ul></div></div>
     <h3>Phase 2: Automation (Week 3-4)</h3>
     <div class="phase"><div class="phase-num">4</div><div><h4>Set Up Blotato + Antigravity</h4><ul><li>Sign up for Blotato ($29/mo Starter)</li><li>Connect social media accounts</li><li>Install MCP connector in Antigravity</li><li>Create first test campaign</li></ul></div></div>
-    <div class="phase"><div class="phase-num">5</div><div><h4>Build YouTube-to-LinkedIn Pipeline</h4><ul><li>Monitor 3-5 key YouTube channels via RSS</li><li>Auto-transcribe with Blotato on new videos</li><li>Generate LinkedIn post copy (Claude)</li><li>Create infographic (Nano Banana Pro or Flux)</li><li>Schedule via Blotato</li><li>Deploy to Modal.com for always-on automation</li></ul></div></div>
+    <div class="phase"><div class="phase-num">5</div><div><h4>Build YouTube-to-LinkedIn Pipeline</h4><ul><li>Monitor 3-5 key YouTube channels via RSS</li><li>Auto-transcribe with Blotato on new videos</li><li>Generate LinkedIn post copy (Claude)</li><li>Create infographic (Nano Banana 2 or FLUX 2 Pro)</li><li>Schedule via Blotato</li><li>Deploy to Modal.com for always-on automation</li></ul></div></div>
     <div class="phase"><div class="phase-num">6</div><div><h4>Marketing Automation for DAEMON_ / Electra</h4><ul><li>Meta ad copy drafting (from brand.md + product shots)</li><li>Competitor monitoring via Meta Ads Library</li><li>Content repurposing (one video → 10 social posts)</li><li>A/B test variants in Airtable</li><li>Track performance metrics</li></ul></div></div>
     <h3>Phase 3: Intelligence (Week 5+)</h3>
     <div class="phase"><div class="phase-num">7</div><div><h4>Refine Model Routing</h4><ul><li>Claude Opus 4.6 for complex creative decisions and treatments</li><li>Claude Sonnet 4.6 for copywriting and agent pipeline tasks</li><li>Claude Haiku 4.5 for simple lookups, formatting, heartbeats</li><li>Gemini 3.1 Flash Lite for high-volume, cost-sensitive tasks</li><li>Auto-retry on rate limits with provider fallback</li><li>Cost tracking and budget alerts via token budget cron</li></ul></div></div>
@@ -1328,7 +1346,7 @@
         <span style="font-size:11px;color:var(--text-dim);">
           <a href="https://www.youtube.com/@RoboNuggets" target="_blank" style="color:var(--accent);text-decoration:none;">YouTube</a> &middot;
           <a href="https://x.com/robonuggets" target="_blank" style="color:var(--accent);text-decoration:none;">@robonuggets</a> &middot;
-          <a href="https://www.skool.com/robonuggets-free/about" target="_blank" style="color:var(--accent);text-decoration:none;">Skool (free, 31k members)</a> &middot;
+          <a href="https://www.skool.com/robonuggets-free/about" target="_blank" style="color:var(--accent);text-decoration:none;">Skool (free, 40k+ members)</a> &middot;
           <a href="https://www.skool.com/robonuggets/about" target="_blank" style="color:var(--accent);text-decoration:none;">Skool (paid, $89/mo)</a> &middot;
           <a href="https://www.tiktok.com/@robonuggets" target="_blank" style="color:var(--accent);text-decoration:none;">TikTok (180k)</a> &middot;
           <a href="https://www.instagram.com/robonuggets/" target="_blank" style="color:var(--accent);text-decoration:none;">Instagram</a> &middot;
@@ -1346,7 +1364,7 @@
         </span>
       </li>
       <li><strong>Brian:</strong> Role-based agent architecture. Key insight from RoboNuggets community: don't ask "do I want a personal assistant?" Ask "what roles on my team could this fill?" Think in specialized agent personas (admin, developer, marketer, creative director) not individual tasks.</li>
-      <li><strong>Peter Steinberger:</strong> OpenClaw creator, now at OpenAI. Built PSPDFKit (1B+ users, sold for 100M+ euros), built 41 AI prototypes, one became OpenClaw (145k+ GitHub stars). PR comprehension workflows, teaching agents to understand intent before implementation.<br>
+      <li><strong>Peter Steinberger:</strong> OpenClaw creator, now at OpenAI. Built PSPDFKit (nearly 1B users, received EUR 100M investment from Insight Partners, later rebranded to Nutrient), built 43 AI prototypes, one became OpenClaw (350k+ GitHub stars). PR comprehension workflows, teaching agents to understand intent before implementation.<br>
         <span style="font-size:11px;color:var(--text-dim);">
           <a href="https://x.com/steipete" target="_blank" style="color:var(--accent);text-decoration:none;">@steipete</a> &middot;
           <a href="https://steipete.me" target="_blank" style="color:var(--accent);text-decoration:none;">steipete.me</a> &middot;
@@ -1367,10 +1385,10 @@
       <li><strong>OpenClaw:</strong> Still the fastest-growing open-source AI agent. Peter Steinberger now at OpenAI, mass-market version likely coming.</li>
       <li><strong>Antigravity:</strong> Google's agentic platform. Tight integration with Workspace, Search, and advertising.</li>
       <li><strong>Codex:</strong> OpenAI's agentic coding platform. Pairs with GPT-5.x models for autonomous development tasks.</li>
-      <li><strong>Claude Code:</strong> Anthropic's CLI agent. Zev's primary daily driver. Full setup documented in Section 10. 15 custom skills, 5 MCP integrations (GitHub, Airtable, Blotato, Gmail, Calendar), two-machine LaunchAgent automation, document creation, browser automation, version-controlled config repo.</li>
-      <li><strong>n8n:</strong> No-code workflow automation. Being replaced by agentic equivalents but still useful for complex integrations.</li>
-      <li><strong>Kling 3.0 / Sora 2:</strong> Video generation quality is approaching cinema-grade. Major shift in content creation economics.</li>
-      <li><strong>Key AI / Fal AI / Wavespeed:</strong> API aggregators. Watch for pricing shifts and model availability changes.</li>
+      <li><strong>Claude Code:</strong> Anthropic's CLI agent. Zev's primary daily driver. Full setup documented in Section 10. 21 custom skills, 6 MCP integrations (GitHub, Airtable, Blotato, Gmail, Calendar, Google Workspace CLI), two-machine LaunchAgent automation, document creation, browser automation, version-controlled config repo.</li>
+      <li><strong>n8n:</strong> No-code workflow automation. Raised $180M at $2.5B valuation. Launched v2.0 with native AI agent capabilities, making it an agentic platform itself. 230K+ active users, 400+ integrations.</li>
+      <li><strong>Kling 3.0 / Veo 3.1 / Seedance 2.0:</strong> Video generation quality is approaching cinema-grade. Sora 2 Pro discontinued (April 2026). Kling 3.0 offers 4K 60fps with multi-shot storyboarding. Veo 3.1 generates native audio. Seedance 2.0 does multimodal audio-video joint generation.</li>
+      <li><strong>Kie AI / Fal AI / Wavespeed:</strong> API aggregators. Watch for pricing shifts and model availability changes.</li>
     </ul>
     <h3>Competitive Dynamics to Watch</h3>
     <ul style="margin-left:20px;">
@@ -1413,7 +1431,7 @@
       </ul>
     </div></div>
 
-    <div class="phase"><div class="phase-num">2</div><div><h4>MCP Integrations (5 Active)</h4>
+    <div class="phase"><div class="phase-num">2</div><div><h4>MCP Integrations (6 Active)</h4>
       <div class="table-wrap" style="margin-top:12px;">
         <table>
           <tr><th>Service</th><th>Package / Connector</th><th>Auth</th><th>Config Location</th></tr>
@@ -1422,6 +1440,7 @@
           <tr><td>Blotato</td><td>HTTP MCP (<code>https://mcp.blotato.com/mcp</code>)</td><td>API key in <code>Marketing/references/.env</code></td><td><code>~/.claude.json</code> mcpServers.blotato</td></tr>
           <tr><td>Gmail</td><td>Claude.ai managed connector</td><td>Google OAuth (browser)</td><td>Settings > MCP in Claude Code</td></tr>
           <tr><td>Google Calendar</td><td>Claude.ai managed connector</td><td>Google OAuth (browser)</td><td>Settings > MCP in Claude Code</td></tr>
+          <tr><td>Google Workspace</td><td><code>@googleworkspace/cli</code> (npm)</td><td>OAuth via gcloud</td><td><code>~/.config/gws/credentials.enc</code></td></tr>
         </table>
       </div>
       <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Add new MCP servers via CLI: <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">claude mcp add --transport stdio --env KEY=VALUE name -- npx -y package-name</code></p>
@@ -1436,8 +1455,8 @@
       </ul>
     </div></div>
 
-    <h3>Custom Skills (15 Total)</h3>
-    <p class="dim" style="margin-bottom:16px;">Each skill is a <code>SKILL.md</code> file in <code>~/.claude/skills/[name]/</code>. Invoked via <code>/skill-name</code> in the CLI. Mirrored to <code>~/Desktop/Claude/.claude/skills/</code> for project-level access. Click any skill to expand full details.</p>
+    <h3>Custom Skills (21 Total)</h3>
+    <p class="dim" style="margin-bottom:16px;">Each skill is a <code>SKILL.md</code> file in <code>~/.claude/skills/[name]/</code>. Invoked via <code>/skill-name</code> in the CLI. Some skills have workspace variants (e.g., health-check-workspace) for project-level context. Click any skill to expand full details.</p>
 
     <!-- SESSION-START -->
     <div class="collapsible">
@@ -1586,11 +1605,11 @@
           <li><strong>Image Generation</strong> (in Antigravity) - Generate in small batches (start with 1, scale to 5-9)</li>
           <li><strong>Review &amp; Iteration</strong> - Troubleshoot common issues, refine prompts</li>
         </ol>
-        <h5>Critical Prompt Rules</h5>
+        <h5>Critical Prompt Rules (Nano Banana Pro/2)</h5>
         <ul>
-          <li>No hex codes (renders as visible color swatches in the image)</li>
-          <li>No JSON prompts, no model names in prompts</li>
-          <li>Plain English colors only (e.g., "warm copper" not "#B87333")</li>
+          <li>Plain English colors only (e.g., "warm copper" not "#B87333") - Nano Banana renders hex codes as swatches</li>
+          <li>Natural language prompts only, no JSON, no model names in prompts</li>
+          <li>Note: FLUX 2 Pro supports hex codes and JSON prompts - rules are model-specific</li>
           <li>Specify 16:9 in prompt text</li>
           <li>Always include: "No text, no labels, no color swatches, no hex codes, no overlays, no borders, no metadata in the image"</li>
           <li>Include "thin hand-drawn border" for storyboard quality</li>
@@ -1895,8 +1914,8 @@
         <tr><td>Agent Teams</td><td>Enabled (experimental)</td><td><code>~/.claude/settings.json</code> env flag</td></tr>
         <tr><td>frontend-design plugin</td><td>Enabled</td><td><code>~/.claude/settings.json</code></td></tr>
         <tr><td>swift-lsp plugin</td><td>Enabled</td><td><code>~/.claude/settings.json</code></td></tr>
-        <tr><td>tmux split panes</td><td>Enabled</td><td><code>~/.claude/settings.json</code> preferences</td></tr>
-        <tr><td>Dangerous mode skip prompt</td><td>Enabled</td><td><code>~/.claude/settings.json</code></td></tr>
+        <tr><td>Agent Teams (teammateMode)</td><td>auto (detects tmux/iTerm2)</td><td><code>~/.claude.json</code></td></tr>
+        <tr><td>Permissions allowlists</td><td>Configured</td><td><code>~/.claude/settings.json</code> permissions.allow/deny</td></tr>
       </table>
     </div>
 
@@ -1904,7 +1923,7 @@
     <div class="video-card">
       <p>The entire Claude Code CLI config is tracked in a private GitHub repo: <strong>zwaismann/claude-code-config</strong></p>
       <pre style="margin-top:12px;">claude-code-config/
-  skills/           # 15 skill directories (SKILL.md files)
+  skills/           # 21 skill directories (SKILL.md files)
   scripts/          # 6 automation scripts
   launchagents/     # 3 LaunchAgent plists
   memory/           # MEMORY.md snapshot
@@ -1946,8 +1965,29 @@
       <li><strong>Skills need mirroring:</strong> Skills are read from both <code>~/.claude/skills/</code> (global) and project-level <code>.claude/skills/</code>. Keep both in sync, or use symlinks via <code>setup.sh</code>.</li>
       <li><strong>MEMORY.md has a 200-line soft limit:</strong> Lines after 200 may be truncated in context. Keep it concise and offload details to topic files linked from MEMORY.md.</li>
       <li><strong>~/.claude.json gets modified externally:</strong> Claude Code itself updates this file (stats, usage). Always re-read before editing to avoid "file modified since read" errors.</li>
-      <li><strong>Storyboard prompts, no hex codes:</strong> Nano Banana Pro renders hex color codes as literal color swatches in images. Always use plain English color descriptions.</li>
+      <li><strong>Storyboard prompts, model-specific color rules:</strong> Nano Banana Pro/2 renders hex codes as literal swatches - use plain English. FLUX 2 Pro supports and benefits from hex codes for precision.</li>
+      <li><strong>HTTPS only for GitHub:</strong> SSH keys with passphrases fail in automated contexts. Always use HTTPS remotes (<code>https://github.com/user/repo</code>), not SSH (<code>git@github.com:</code>). The <code>gh</code> CLI authenticates via HTTPS token automatically.</li>
+      <li><strong>OG images + favicons are mandatory:</strong> Every website gets Open Graph images (1200x630px per page) and multi-size favicons. Links without preview images look unprofessional. Build these in from the start, not as an afterthought.</li>
+      <li><strong>/compact is useful:</strong> Use it proactively at 50-60% context usage. CLAUDE.md and memory files survive compaction (they reload from disk). With the 1M context window on Opus 4.6, you have more runway than before.</li>
     </ul>
+
+    <h3>Core Workflow Patterns</h3>
+    <div class="video-card">
+      <h4 style="margin-top:0;">Subagent-Driven Execution</h4>
+      <p>Default to dispatching parallel sub-agents whenever tasks are independent. Each sub-agent runs in its own context window, keeping the main session clean. This is the single biggest productivity multiplier in this setup.</p>
+      <ul style="margin-left:20px;margin-top:8px;">
+        <li>Use Superpowers' subagent-driven-development for implementation plans</li>
+        <li>Dispatch parallel research agents for independent queries</li>
+        <li>Each agent owns specific files - no two agents edit the same file</li>
+        <li>Verify all agents' work compiles together before reporting completion</li>
+      </ul>
+
+      <h4>Fresh-Eyes QA Review</h4>
+      <p>After a major build phase, spin up a review agent with zero project context. It reads all source code, understands the purpose, tests every feature by reading the code, grades it, and produces a prioritized list of specific improvements. Then implement and review again. This catches issues that implementation agents overlook.</p>
+
+      <h4>Direct API Pipeline (Not Just Antigravity)</h4>
+      <p>For automated image generation, run directly via Python script rather than pasting prompts into Antigravity. The pipeline reads prompts from Airtable, calls the Gemini API, crops to aspect ratio, uploads for a public URL, and attaches back to Airtable - all in one pass. Script lives at <code>scripts/nano_banana_generate.py</code>.</p>
+    </div>
   </section>
 
   <!-- OPENCLAW SETUP GUIDE (MAJOR UPDATE: added Phase 10 Stability) -->
@@ -2067,10 +2107,10 @@ lsof -iTCP:18789 -sTCP:LISTEN</pre>
         <p>Download BlueBubbles from bluebubbles.app. Grant Full Disk Access. Skip Firebase, skip Private API. Select LAN URL proxy. Set a strong password. Enable Keep macOS Awake, Launch Agent crash persistence, Start Minimized.</p>
         <p>Add webhook in BlueBubbles: <code>http://localhost:18789/bluebubbles-webhook?password=YOUR_PASSWORD</code></p>
         <p>Pair iMessage and Telegram:</p>
-        <pre>openclaw pairing list --channel bluebubbles
-openclaw pairing approve --channel bluebubbles &lt;CODE&gt;
-openclaw pairing list --channel telegram
-openclaw pairing approve --channel telegram &lt;CODE&gt;</pre>
+        <pre>openclaw pairing list bluebubbles
+openclaw pairing approve bluebubbles &lt;CODE&gt;
+openclaw pairing list telegram
+openclaw pairing approve telegram &lt;CODE&gt;</pre>
         <p><strong>Known issue (2026.3.7):</strong> BlueBubbles plugin has a bug with a missing <code>parse-finite-number.js</code> module. May need to wait for a patch.</p>
       </div></div>
     </div>
@@ -2091,9 +2131,10 @@ openclaw pairing approve --channel telegram &lt;CODE&gt;</pre>
         <tr><td>SOUL.md</td><td>Personality, voice, philosophy, smoke detector protocol, stability rules</td></tr>
         <tr><td>AGENTS.md</td><td>Workflow, memory management, guardrails, quality bar</td></tr>
         <tr><td>USER.md</td><td>About the user</td></tr>
-        <tr><td>BOOT.md</td><td>Session startup checklist, recovery protocol</td></tr>
+        <tr><td>BOOTSTRAP.md</td><td>Session startup checklist, recovery protocol</td></tr>
+        <tr><td>TOOLS.md</td><td>Available tools and command references</td></tr>
         <tr><td>HEARTBEAT.md</td><td>Proactive check-in cadence and rules</td></tr>
-        <tr><td>BRIEFING_TEMPLATES.md</td><td>News briefing format, sources, protocols</td></tr>
+        <tr><td>BRIEFING_TEMPLATES.md</td><td>News briefing format, sources, protocols (custom, not a standard OpenClaw file)</td></tr>
         <tr><td>MEMORY.md</td><td>Long-term curated memory, mission control state</td></tr></table>
         <p>Write all files to <code>~/.openclaw/workspace/</code> using the <code>cat > file << 'EOF'</code> pattern.</p>
       </div></div>
@@ -2258,9 +2299,10 @@ fi</pre>
     SOUL.md                 # Workspace copy with additional operating rules
     AGENTS.md
     USER.md
-    BOOT.md
+    BOOTSTRAP.md            # (also known as BOOT.md)
+    TOOLS.md
     HEARTBEAT.md
-    BRIEFING_TEMPLATES.md
+    BRIEFING_TEMPLATES.md   # Custom (not a standard OpenClaw boot file)
     MEMORY.md
     memory/                 # Daily notes
     skills/
@@ -2341,9 +2383,9 @@ fi</pre>
         <tr><th>Provider</th><th>Best Models</th><th>Strengths</th><th>Weaknesses</th><th>Data Location</th></tr>
         <tr><td>Anthropic</td><td>Claude Opus 4.6, Sonnet 4.6, Haiku 4.5</td><td>Best instruction following, reliable uptime, generous rate limits on paid tier</td><td>Higher cost for Opus</td><td>US</td></tr>
         <tr><td>Google</td><td>Gemini 3.1 Flash Lite, 3.1 Pro Preview, 3 Flash Preview</td><td>Cheap, fast, 1M+ token context, multimodal (audio/video native)</td><td>Preview models have tight rate limits, catalog lag in OpenClaw, naming confusion</td><td>US</td></tr>
-        <tr><td>OpenAI</td><td>GPT-5.4, GPT-5.2, GPT-5 Mini</td><td>Strong reasoning, good tool use, computer use support</td><td>Pricing can be high, rapid model deprecation cycles</td><td>US</td></tr>
-        <tr><td>DeepSeek</td><td>DeepSeek-V3, R1</td><td>Very cheap, strong reasoning</td><td>API calls route through Chinese servers, data subject to Chinese law</td><td>China</td></tr>
-        <tr><td>Qwen (Alibaba)</td><td>Qwen 2.5</td><td>Competitive quality, cheap</td><td>Same data sovereignty concerns as DeepSeek</td><td>China</td></tr>
+        <tr><td>OpenAI</td><td>GPT-5.4, GPT-5.4 Mini, GPT-5.2</td><td>Strong reasoning, good tool use, computer use support</td><td>Aggressive model deprecation cycles (Sora shutting down April 2026, DALL-E 3 deprecated May 2026)</td><td>US</td></tr>
+        <tr><td>DeepSeek</td><td>DeepSeek-V3.2, R1</td><td>Very cheap, strong reasoning (V4 imminent)</td><td>API calls route through Chinese servers, data subject to Chinese law. Blocked in several countries.</td><td>China</td></tr>
+        <tr><td>Qwen (Alibaba)</td><td>Qwen 3.5, 3.6 Plus Preview</td><td>Competitive quality, cheap</td><td>Same data sovereignty concerns as DeepSeek</td><td>China</td></tr>
       </table>
     </div>
 
@@ -2374,8 +2416,9 @@ fi</pre>
         <tr><td>Google</td><td>google/gemini-3.1-pro-preview</td><td>Stable</td></tr>
         <tr><td>Google</td><td>google/gemini-3-flash-preview</td><td>Stable</td></tr>
         <tr><td>Google</td><td>google/gemini-3-pro-preview</td><td>Stable</td></tr>
-        <tr><td>OpenAI</td><td>openai/gpt-5.4</td><td>New, check OpenClaw support</td></tr>
-        <tr><td>OpenAI</td><td>openai/gpt-5.2</td><td>Stable</td></tr>
+        <tr><td>OpenAI</td><td>openai/gpt-5.4</td><td>Stable (March 2026)</td></tr>
+        <tr><td>OpenAI</td><td>openai/gpt-5.4-mini</td><td>Stable (March 2026)</td></tr>
+        <tr><td>OpenAI</td><td>openai/gpt-5.2</td><td>Stable (being superseded by 5.4)</td></tr>
       </table>
     </div>
     <p class="dim">Always verify model availability with <code>openclaw models list</code> before configuring. New Google models often take days to appear in the catalog after release.</p>
@@ -2425,8 +2468,8 @@ fi</pre>
       </ul>
       <p style="margin-top:8px;">Press <code style="background:var(--surface);padding:2px 8px;border-radius:4px;font-family:var(--mono);font-size:12px;">Ctrl+S</code> to save your configuration, then restart Claude Code.</p>
       <h4>The 50% Rule</h4>
-      <p>Once your context percentage hits around 50%, Claude is already degrading. Start a fresh session rather than pushing further. <strong>Do not use the /compact command.</strong> It creates a worst-of-both-worlds situation where you lose useful context but retain noise from earlier in the session.</p>
-      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Tip: Think of context like short-term memory. The more you cram in, the more the earlier stuff gets fuzzy. Fresh sessions give Claude a clean slate.</p>
+      <p>Once your context percentage hits around 50-60%, quality starts to degrade. You have two options: <strong>use the /compact command</strong> proactively to compress earlier context (CLAUDE.md and memory files survive compaction - they reload from disk), or start a fresh session. Both are valid strategies.</p>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">Tip: Use /compact before you hit the wall, not after. It works best when called early. For truly fresh starts (new feature, different project), a new session is still better. With the 1M context window now available on Opus 4.6 and Sonnet 4.6, you have more runway than before.</p>
     </div></div>
 
     <h3>Step 2: Install Superpowers Plugin</h3>
@@ -2434,7 +2477,7 @@ fi</pre>
       <p>Superpowers transforms Claude Code from ad hoc prompting into structured, spec-driven development using sub-agents. Each sub-agent runs in its own context window, so your main session stays clean.</p>
       <h4>Install</h4>
       <p>Inside Claude Code, type:</p>
-      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugins</code></pre>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugin</code></pre>
       <p>Find and add <strong>superpowers</strong>. When prompted, install for user scope.</p>
       <h4>The Three-Command Workflow</h4>
       <div class="table-wrap" style="margin-top:12px;">
@@ -2451,7 +2494,7 @@ fi</pre>
     <h3>Step 3: Install Code Simplifier Plugin</h3>
     <div class="phase"><div class="phase-num">3</div><div>
       <p>While still in the plugins menu from Step 2, also add <strong>Code Simplifier</strong>. This plugin helps keep your codebase clean and readable.</p>
-      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugins
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugin
 → Find and add code simplifier. Restart Claude Code when done.</code></pre>
     </div></div>
 
@@ -2459,16 +2502,16 @@ fi</pre>
     <div class="phase"><div class="phase-num">4</div><div>
       <p>Sequential Thinking adds chain-of-thought reasoning to Claude, allowing it to think deeper and longer before producing output. This directly improves the quality of brainstorming and planning in Superpowers.</p>
       <h4>Install</h4>
-      <p>Inside Claude Code, type this as a regular prompt:</p>
-      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>please install sequential thinking MCP server</code></pre>
-      <p>Claude will find and configure the MCP server automatically. Restart Claude Code once the install completes.</p>
+      <p>This is an <strong>MCP server</strong>, not a plugin. Install it via the CLI:</p>
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking</code></pre>
+      <p>Restart Claude Code once the install completes. You can also ask Claude to install it and it will configure it automatically.</p>
     </div></div>
 
     <h3>Step 5: Install Context7 Plugin</h3>
     <div class="phase"><div class="phase-num">5</div><div>
       <p>Claude's training data can lag 6 to 12 months behind. Context7 gives it access to up-to-date documentation for every API, library, and service it might use, so it stops hallucinating outdated code.</p>
       <h4>Install</h4>
-      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugins
+      <pre style="background:var(--surface);padding:16px;border-radius:8px;margin:12px 0;font-family:var(--mono);font-size:12px;overflow-x:auto;"><code>/plugin
 → Find and add context7. Install for user scope, then restart Claude Code.</code></pre>
     </div></div>
 
@@ -2513,7 +2556,7 @@ fi</pre>
       <table>
         <tr><th>Action</th><th>Command</th></tr>
         <tr><td>Configure status line</td><td><code>npx ccstatusline@latest</code></td></tr>
-        <tr><td>Open plugins menu</td><td><code>/plugins</code></td></tr>
+        <tr><td>Open plugins menu</td><td><code>/plugin</code></td></tr>
         <tr><td>Start a new feature</td><td><code>superpowers brainstorm</code></td></tr>
         <tr><td>Create implementation plan</td><td><code>superpowers write plan</code></td></tr>
         <tr><td>Build from plan</td><td><code>superpowers execute plan</code></td></tr>
@@ -2525,16 +2568,126 @@ fi</pre>
     </div>
   </section>
 
+  <!-- KNOWLEDGE BASE & SECURITY -->
+  <section id="knowledge">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <h2>Knowledge &amp; Security</h2>
+    </div>
+    <p style="margin-bottom:24px;">Two protocols that compound over time: an LLM-maintained knowledge base (inspired by Andrej Karpathy) and a secrets management system that eliminates plaintext credentials from your machine. Both were implemented April 2026 and are now part of every session.</p>
+    <p style="margin-bottom:24px;font-size:11px;color:var(--text-dim);"><strong>Source:</strong> Andrej Karpathy's viral tweet on LLM Knowledge Bases (18M+ views, April 2026) + Electra Filmworks security audit</p>
+
+    <h3>The Karpathy Knowledge Base Pattern</h3>
+    <p style="margin-bottom:16px;">Andrej Karpathy (former head of Tesla AI, co-built GPT at OpenAI) shared how he uses LLMs to build personal knowledge bases for research topics. The core insight: instead of asking an LLM questions and letting the answers evaporate, you compile them into a structured wiki that the LLM maintains. Knowledge compounds across sessions instead of resetting every time.</p>
+
+    <div class="phase"><div class="phase-num">1</div><div>
+      <h4>The Compilation Loop</h4>
+      <p>This is the pattern that makes it work:</p>
+      <ol>
+        <li><strong>Raw ingestion</strong> - Source material (articles, repos, research, client data) goes into project folders</li>
+        <li><strong>LLM compilation</strong> - The LLM structures raw data into linked markdown articles in a Knowledge directory. The human rarely edits directly.</li>
+        <li><strong>Cumulative Q&amp;A</strong> - When a complex question is researched, the answer gets filed back into the knowledge base. Every query adds to the system.</li>
+        <li><strong>Linting</strong> - Periodic LLM passes find gaps, stale info, inconsistencies, and connections between articles</li>
+        <li><strong>The wiki is the LLM's domain</strong> - You read and benefit. The LLM writes and maintains. You are the reader, not the editor.</li>
+      </ol>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">2</div><div>
+      <h4>Our Implementation</h4>
+      <p>We adapted Karpathy's approach for Claude Code (no Obsidian or Marp required):</p>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Component</th><th>Location</th><th>Purpose</th></tr>
+          <tr><td>Knowledge Base</td><td><code>Desktop/Claude/Knowledge/</code></td><td>LLM-maintained wiki with categorized articles</td></tr>
+          <tr><td>INDEX.md</td><td><code>Knowledge/INDEX.md</code></td><td>Master index with brief summaries of every article</td></tr>
+          <tr><td>Machine Manifest</td><td><code>Knowledge/operations/machine-manifest.md</code></td><td>Full system inventory - the rebuild blueprint</td></tr>
+          <tr><td>Security Posture</td><td><code>Knowledge/operations/security-posture.md</code></td><td>Current security state and protocols</td></tr>
+          <tr><td>Secrets Management</td><td><code>Knowledge/operations/secrets-management.md</code></td><td>Every secret, where it lives, how to rotate</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:12px;">Categories: <strong>operations</strong>, <strong>film-production</strong>, <strong>business</strong>, <strong>tech</strong>, <strong>real-estate</strong>. New categories added as needed.</p>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">The value isn't the tool (Obsidian, Marp, VS Code) - it's the compilation loop. Raw data goes in, structured knowledge comes out, queries add to the knowledge, and the whole thing compounds.</p>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">3</div><div>
+      <h4>Session Protocol (Updated)</h4>
+      <p>Every session now follows this protocol:</p>
+      <ul>
+        <li><strong>Start:</strong> Read MASTER_HUB.md, user_zw.md, and skim Knowledge/INDEX.md for relevant context</li>
+        <li><strong>During:</strong> Create/update project notes. File research findings into Knowledge as you go.</li>
+        <li><strong>End:</strong> Update hub files, compile new knowledge into the Knowledge base, update INDEX.md</li>
+      </ul>
+    </div></div>
+
+    <h3>Secrets Management Protocol</h3>
+    <p style="margin-bottom:16px;">A full security audit (April 10, 2026) found plaintext API keys, passwords, and tokens scattered across <code>~/.zshrc</code> and 8 project <code>.env</code> files. Any npm package, VS Code extension, or MCP server could read them. Everything was migrated to encrypted storage.</p>
+
+    <div class="phase"><div class="phase-num">4</div><div>
+      <h4>The Three-Layer Approach</h4>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Layer</th><th>What goes here</th><th>How it works</th></tr>
+          <tr><td><strong>macOS Keychain</strong></td><td>Global secrets (API keys, passwords, tokens)</td><td>Hardware-encrypted by Apple Silicon Secure Enclave. Loaded into env vars at shell startup via <code>security find-generic-password</code></td></tr>
+          <tr><td><strong>Vercel Env Vars</strong></td><td>Deployed project secrets</td><td>Encrypted at rest on Vercel. Pull locally with <code>vercel env pull</code> only when needed for dev</td></tr>
+          <tr><td><strong>generate-env.sh</strong></td><td>Local-only project secrets</td><td>Script pulls from Keychain and generates a temporary .env file. No plaintext stored on disk.</td></tr>
+        </table>
+      </div>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">5</div><div>
+      <h4>Adding New Secrets (Checklist)</h4>
+      <ol>
+        <li>Store in macOS Keychain: <code>security add-generic-password -a "zeevwaismann" -s "service-name" -w "value" -U</code></li>
+        <li>If global: add <code>export VAR=$(security find-generic-password -s "service-name" -a "zeevwaismann" -w)</code> to <code>~/.zshrc</code></li>
+        <li>If project-specific and deployed: push to Vercel with <code>vercel env add</code></li>
+        <li>If project-specific and local: add to that project's <code>generate-env.sh</code></li>
+        <li>Never commit .env files (global gitignore at <code>~/.gitignore_global</code> catches this)</li>
+        <li>Update <code>Knowledge/operations/secrets-management.md</code> with the new entry</li>
+      </ol>
+    </div></div>
+
+    <div class="phase"><div class="phase-num">6</div><div>
+      <h4>What was migrated</h4>
+      <div class="table-wrap" style="margin-top:12px;">
+        <table>
+          <tr><th>Secret</th><th>From</th><th>To</th></tr>
+          <tr><td>Gmail App Password</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>Airbnb Credentials</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>GitHub PAT</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>Airtable API Key</td><td>~/.zshrc (plaintext)</td><td>Keychain</td></tr>
+          <tr><td>Supabase, Patreon, Resend, Google Maps keys</td><td>Project .env files</td><td>Vercel</td></tr>
+          <tr><td>Mapbox, Supabase keys</td><td>Project .env files</td><td>Vercel</td></tr>
+          <tr><td>Google Service Account Key</td><td>SiteForge .env (base64 private key)</td><td>Vercel</td></tr>
+          <tr><td>TRUEFILE encryption + session + SMTP</td><td>Project .env file</td><td>Keychain + generate-env.sh</td></tr>
+        </table>
+      </div>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-dim);">FileVault disk encryption confirmed ON. Global gitignore blocks .env* from all repos. 8 plaintext .env files deleted after secrets were confirmed in their new locations.</p>
+    </div></div>
+
+    <h3>Quick Reference Card</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Action</th><th>Command</th></tr>
+        <tr><td>Read a Keychain secret</td><td><code>security find-generic-password -s "name" -a "zeevwaismann" -w</code></td></tr>
+        <tr><td>Store a new secret</td><td><code>security add-generic-password -a "zeevwaismann" -s "name" -w "value" -U</code></td></tr>
+        <tr><td>Pull Vercel env vars locally</td><td><code>vercel env pull .env.local</code></td></tr>
+        <tr><td>Push a secret to Vercel</td><td><code>printf 'value' | vercel env add VAR_NAME production</code></td></tr>
+        <tr><td>Generate TRUEFILE .env</td><td><code>cd TRUEFILE && ./generate-env.sh</code></td></tr>
+        <tr><td>Check FileVault status</td><td><code>fdesetup status</code></td></tr>
+      </table>
+    </div>
+  </section>
+
   <!-- LINKS & RESOURCES -->
   <section id="links">
     <div class="section-header">
-      <span class="section-num">14</span>
+      <span class="section-num">15</span>
       <h2>Links &amp; Resources</h2>
     </div>
     <h3>RoboNuggets (Jay E)</h3>
     <div class="links-grid">
       <div class="link-card"><a href="https://www.youtube.com/@RoboNuggets" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">YouTube Channel</div><div class="lc-desc">90k+ subscribers. AI agents, automation, OpenClaw tutorials</div></div><div class="lc-tag">YouTube</div></a></div>
-      <div class="link-card"><a href="https://www.skool.com/robonuggets-free/about" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Skool Community (Free)</div><div class="lc-desc">31k members. Daily updates on OpenClaw and emerging techniques</div></div><div class="lc-tag">Community</div></a></div>
+      <div class="link-card"><a href="https://www.skool.com/robonuggets-free/about" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Skool Community (Free)</div><div class="lc-desc">40k+ members. Daily updates on OpenClaw and emerging techniques</div></div><div class="lc-tag">Community</div></a></div>
       <div class="link-card"><a href="https://www.skool.com/robonuggets/about" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Skool Community (Paid, $89/mo)</div><div class="lc-desc">Premium access with CRT templates, skill packs, direct support</div></div><div class="lc-tag">Premium</div></a></div>
       <div class="link-card"><a href="https://robonuggets.beehiiv.com/" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Newsletter</div><div class="lc-desc">"Make everyday a weekend with AI agents"</div></div><div class="lc-tag">Newsletter</div></a></div>
       <div class="link-card"><a href="https://x.com/robonuggets" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">X / Twitter</div><div class="lc-desc">@robonuggets</div></div><div class="lc-tag">Social</div></a></div>
@@ -2545,7 +2698,7 @@ fi</pre>
     <div class="links-grid">
       <div class="link-card"><div><div class="lc-name">OpenClaw</div><div class="lc-desc">Open-source AI agent for messaging platforms</div></div><div class="lc-tag">Core</div></div>
       <div class="link-card"><div><div class="lc-name">Antigravity</div><div class="lc-desc">Google's agentic platform with Workspace integration</div></div><div class="lc-tag">Platform</div></div>
-      <div class="link-card"><div><div class="lc-name">Claude Code</div><div class="lc-desc">Zev's primary CLI agent. 15 skills, 5 MCP integrations, two-machine automation. See Sections 10 + 13.</div></div><div class="lc-tag">Primary</div></div>
+      <div class="link-card"><div><div class="lc-name">Claude Code</div><div class="lc-desc">Zev's primary CLI agent. 25 skills, 7 MCP integrations, two-machine automation, LLM Knowledge Base. See Sections 10, 13, 14.</div></div><div class="lc-tag">Primary</div></div>
       <div class="link-card"><div><div class="lc-name">Codex (OpenAI)</div><div class="lc-desc">OpenAI's agentic coding platform for GPT-5.x models</div></div><div class="lc-tag">Tools</div></div>
       <div class="link-card"><div><div class="lc-name">Airtable</div><div class="lc-desc">Database for managing creative assets and campaigns</div></div><div class="lc-tag">Data</div></div>
       <div class="link-card"><div><div class="lc-name">Blotato</div><div class="lc-desc">AI content engine for multi-platform scheduling</div></div><div class="lc-tag">Content</div></div>
@@ -2553,8 +2706,8 @@ fi</pre>
     </div>
     <h3>API Aggregators</h3>
     <div class="links-grid">
-      <div class="link-card"><div><div class="lc-name">Google AI Studio</div><div class="lc-desc">$300 free credit per Gmail account. Nano Banana Pro & VO 3.1</div></div><div class="lc-tag">Free</div></div>
-      <div class="link-card"><div><div class="lc-name">Key AI</div><div class="lc-desc">Cheapest API prices with competitive uptime</div></div><div class="lc-tag">Budget</div></div>
+      <div class="link-card"><div><div class="lc-name">Google AI Studio</div><div class="lc-desc">Free tier with rate limits. Nano Banana 2/Pro & Veo 3.1</div></div><div class="lc-tag">Free</div></div>
+      <div class="link-card"><div><div class="lc-name">Kie AI</div><div class="lc-desc">Cheapest API prices with competitive uptime</div></div><div class="lc-tag">Budget</div></div>
       <div class="link-card"><div><div class="lc-name">Fal AI</div><div class="lc-desc">400+ models, reliable, battle-tested infrastructure</div></div><div class="lc-tag">Reliable</div></div>
       <div class="link-card"><div><div class="lc-name">Wavespeed AI</div><div class="lc-desc">Competitive pricing, good fallback option</div></div><div class="lc-tag">Backup</div></div>
     </div>
@@ -2563,8 +2716,9 @@ fi</pre>
       <div class="link-card"><div><div class="lc-name">Anthropic (Claude)</div><div class="lc-desc">Recommended for agent work. Best instruction following and reliability.</div></div><div class="lc-tag">LLM</div></div>
       <div class="link-card"><div><div class="lc-name">Google (Gemini)</div><div class="lc-desc">Fast, cheap, massive context. Watch for rate limits on preview models.</div></div><div class="lc-tag">LLM</div></div>
       <div class="link-card"><div><div class="lc-name">OpenAI (GPT-5.x)</div><div class="lc-desc">GPT-5.4 flagship. Strong reasoning, computer use, tool search.</div></div><div class="lc-tag">LLM</div></div>
-      <div class="link-card"><div><div class="lc-name">Kling AI (Kling 3.0)</div><div class="lc-desc">Cinematic 60fps video generation</div></div><div class="lc-tag">Video</div></div>
-      <div class="link-card"><div><div class="lc-name">OpenAI (Sora 2 Pro)</div><div class="lc-desc">Ultra-high quality long-form video</div></div><div class="lc-tag">Video</div></div>
+      <div class="link-card"><div><div class="lc-name">Kling AI (Kling 3.0)</div><div class="lc-desc">Cinematic 4K 60fps video with multi-shot storyboarding</div></div><div class="lc-tag">Video</div></div>
+      <div class="link-card"><div><div class="lc-name">ByteDance (Seedance 2.0)</div><div class="lc-desc">Audio-video joint generation, multimodal</div></div><div class="lc-tag">Video</div></div>
+      <div class="link-card"><div><div class="lc-name">Google (Veo 3.1)</div><div class="lc-desc">720p-4K video with native audio, 8s clips. Veo 3.1 Lite for fast iteration.</div></div><div class="lc-tag">Video</div></div>
     </div>
     <h3>Communication &amp; Channels</h3>
     <div class="links-grid">
@@ -2573,6 +2727,7 @@ fi</pre>
     </div>
     <h3>People to Follow</h3>
     <div class="links-grid">
+      <div class="link-card"><a href="https://x.com/karpathy" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Andrej Karpathy</div><div class="lc-desc">Former Tesla AI lead, co-built GPT at OpenAI. LLM Knowledge Base methodology. <span style="color:var(--accent);">@karpathy</span></div></div><div class="lc-tag">Research</div></a></div>
       <div class="link-card"><a href="https://www.youtube.com/@RoboNuggets" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Jay E (RoboNuggets)</div><div class="lc-desc">CRT framework, OpenClaw, AI automation. <span style="color:var(--accent);">@robonuggets</span></div></div><div class="lc-tag">Creator</div></a></div>
       <div class="link-card"><a href="https://www.youtube.com/@matthew_berman" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Matthew Berman</div><div class="lc-desc">Security-first agent design. CEO, Forward Future. <span style="color:var(--accent);">@MatthewBerman</span></div></div><div class="lc-tag">Expert</div></a></div>
       <div class="link-card"><a href="https://steipete.me" target="_blank" style="text-decoration:none;color:inherit;display:contents;"><div><div class="lc-name">Peter Steinberger</div><div class="lc-desc">OpenClaw creator, now at OpenAI. Built PSPDFKit. <span style="color:var(--accent);">@steipete</span></div></div><div class="lc-tag">Creator</div></a></div>
@@ -2585,7 +2740,7 @@ fi</pre>
 
 <footer>
   <p><strong>AI Agent Masterclass</strong></p>
-  <p>Last updated March 22, 2026. v2.4. Added Claude Code Power Setup guide (Section 13).</p>
+  <p>Last updated April 10, 2026. v4.0. Added Section 14: Knowledge Base &amp; Security - Karpathy-inspired LLM knowledge compilation, secrets management protocol (all plaintext migrated to Keychain + Vercel), machine manifest. Updated skill count to 25, MCP integrations to 7. Previous: v3.0 accuracy audit (model names, CRT framework, subagent patterns, GWS CLI).</p>
 </footer>
 
 <script>
